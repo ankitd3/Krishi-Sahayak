@@ -78,10 +78,9 @@
 
       <div class="my-3 p-3 bg-white rounded box-shadow">
 
-     
 		<form class="form-group" action="upload.php" method="POST" enctype="multipart/form-data">
 			<label>AUDIO / IMAGE</label>
-			<input type="file" name="audioFile">
+			<input type="file" name="audio_img_file">
 			<input class="btn btn-primary" type="submit" name="save_audio" value="UPLOAD">
 		</form>
 
