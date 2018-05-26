@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: May 26, 2018 at 07:03 PM
+-- Generation Time: May 26, 2018 at 07:06 PM
 -- Server version: 10.1.30-MariaDB
 -- PHP Version: 7.2.2
 
@@ -58,7 +58,8 @@ CREATE TABLE `q` (
 --
 
 INSERT INTO `q` (`qid`, `fid`) VALUES
-('5b0970268df125.39861510.mp3', 1);
+('5b0970268df125.39861510.mp3', 1),
+('5b0993baa24c01.10087531.mp3', 1);
 
 -- --------------------------------------------------------
 
@@ -138,6 +139,7 @@ ALTER TABLE `q`
 -- Indexes for table `qimgtext`
 --
 ALTER TABLE `qimgtext`
+  ADD PRIMARY KEY (`img_id`),
   ADD KEY `img_id` (`img_id`);
 
 --
