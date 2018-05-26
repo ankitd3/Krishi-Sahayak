@@ -1,6 +1,8 @@
 <?php
 
-if(isset($_POST['save_audio'])){
+if(isset($_POST['submit_q'])){
+
+	if(is_uploaded_file($_FILES['audio_img_file']['tmp_name'])){
 
 	$file=$_FILES['audio_img_file']; //audio/image file from the form
 	$fileName=$file['name']; //Name of the file
@@ -37,20 +39,55 @@ if(isset($_POST['save_audio'])){
 		$var="Incompatible File type";
 	}
 
-	//echo $fileExt;
+	if(!empty($_POST['text'])){
+			//INSERT INTO IMG_TEXT TABLE THE imgname and text
+			$textFileName = uniqid('',true).".txt";
+			$textFileNewName = $dir.$textFileName;
+			$var = $_POST['text'];
+			$myfile = fopen($textFileNewName, "w") or die("Unable to open file!");
+			insertImgText($textFileName,basename($fileNewName));
+			fwrite($myfile, $var);
+			fclose($myfile);
+		}
+	}
 
+	elseif (!empty($_POST['text'])) {
+		$dir='Solution/';
+		$fileName = uniqid('',true).".txt";
+		$fileNewName = $dir.$fileName;
+		$var = $_POST['text'];//The solution text
+		$qid = $_POST['qid']; //Qid for which the solution is provided
+		$myfile = fopen($fileNewName, "w") or die("Unable to open file!");//creates file if not exists
+		insertdb($fileName,$qid);//insert into the question-solution relation
+		fwrite($myfile, $var);//save the solution(.txt) to the solution folder
+		fclose($myfile);
+	}
 }
-if(isset($_POST['text_submit'])){
-	$dir='Solution/';
-	$fileName = uniqid('',true).".txt";
-	$fileNewName = $dir.$fileName;
-	$var = $_POST['text_submit']; //The solution text
-	$qid = $_POST['qid']; //Qid for which the solution is provided
-	$myfile = fopen($fileNewName, "w") or die("Unable to open file!"); //creates file if not exists
-	insertdb($fileName,$qid); //insert into the question-solution relation
-	fwrite($myfile, $var); //save the solution(.txt) to the solution folder
-	fclose($myfile);
-}
+
+function insertImgText($text,$img){
+	$servername = "localhost";
+	$username = "root";
+	$password = "";
+	$dbname = "ks";
+
+	// Create connection
+	$conn = new mysqli($servername, $username, $password, $dbname);
+	// Check connection
+	if ($conn->connect_error) {
+	    die("Connection failed: " . $conn->connect_error);
+	} 
+
+	$sql = "INSERT INTO simgtext (img_id,text_id) VALUES ('".$img."','".$text."')";
+
+	if ($conn->query($sql) === TRUE) {
+	    echo "New record created successfully";
+	} else {
+	    echo "Error: " . $sql . "<br>" . $conn->error;
+	}
+
+	$conn->close();
+	}
+
 function insertdb($solution,$question){
 	$servername = "localhost";
 	$username = "root";

@@ -79,20 +79,19 @@
       <div class="my-3 p-3 bg-white rounded box-shadow">
 
 		<form class="form-group" action="Solution.php" method="POST" enctype="multipart/form-data">
-			<label>AUDIO / IMAGE</label>
+      
       <input type="text" name="qid">
-			<input type="file" name="audio_img_file">
-			<input class="btn btn-primary" type="submit" name="save_audio" value="UPLOAD">
-		</form>
 
-		<br><hr><br>
+      <label>AUDIO / IMAGE</label>
+      <input type="file" name="audio_img_file">
+    
+    <br><hr><br>
 
-		<form class="form-group" action="Solution.php" method="POST">
-			<label>TEXT</label>
-      <input type="text" name="qid">
-			<input type="text" name="text_submit">
-			<input class="btn-primary" type="submit">
-		</form>
+      <label>TEXT</label>
+      <input type="text" name="text">
+
+      <input class="btn btn-primary" type="submit" name="submit_q" value="UPLOAD">
+    </form>
 
 		<!-- <label>TEXT</label>
 		<input type="text" name="textQ" placeholder="Enter your query here">
