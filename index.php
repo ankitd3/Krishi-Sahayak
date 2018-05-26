@@ -3,10 +3,10 @@
 $sqlSolved = "SELECT * FROM q WHERE solved = 1";
 $sqlUnsolved = "SELECT * FROM q WHERE solved = 0";
 
-$unsolved = fetchsql($sqlUnsolve);
-$solved = fetchsql($sqlSolved);
+$solved = fetchsql($sqlSolved,1);
+$unsolved = fetchsql($sqlUnsolved,0);
 
-function fetchsql($sql){
+function fetchsql($sql,$solved){
   $temp = "";
 
   $servername = "localhost";
@@ -32,23 +32,35 @@ function fetchsql($sql){
           $fileExt = strtolower(end($fileEx));
 
           if(strcmp($fileExt,'mp3')==0){
-            $temp = makeAudio($fileName,$farmerId,$temp);
-            $textName = checkImgText($fileName);
+            $temp = makeAudio($fileName,$farmerId,$temp,"Question");
+            $textName = checkImgText($fileName,1);
             if($textName!=0){
-              $temp = makeText($textName,"^^^^^",$temp);
+              $temp = makeText($textName,"^^^^^",$temp,"Question");
+            }
+            
+            if($solved!=0){
+              $temp = findsolution($fileName,$temp);
             }
 
           }
           elseif (strcmp($fileExt,'jpg')==0) {
-            $temp = makeImage($fileName,$farmerId,$temp);
-            $textName = checkImgText($fileName);
+            $temp = makeImage($fileName,$farmerId,$temp,"Question");
+            $textName = checkImgText($fileName,1);
             if($textName!=0){
-              $temp = makeText($textName,"^^^^",$temp);
+              $temp = makeText($textName,"^^^^",$temp,"Question");
+            }
+            
+            if($solved!=0){
+              $temp = findsolution($fileName,$temp);
             }
 
           }
           elseif (strcmp($fileExt,'txt')==0) {
-            $temp = makeText($fileName,$farmerId,$temp);
+            $temp = makeText($fileName,$farmerId,$temp,"Question");
+            
+            if($solved!=0){
+              $temp = findsolution($fileName,$temp);
+            }
           }
       }
       return $temp;
@@ -58,7 +70,8 @@ function fetchsql($sql){
   $conn->close();
 }
 
-function checkImgText($fileName){
+function findsolution($fileName,$temp){
+  
   $servername = "localhost";
   $username = "root";
   $password = "";
@@ -69,7 +82,58 @@ function checkImgText($fileName){
   if ($conn->connect_error) {
       die("Connection failed: " . $conn->connect_error);
   }
-  $sql = "SELECT text_id FROM qimgtext WHERE img_id='".$fileName."'";
+  
+  $sqlSolution = "SELECT sid,eid FROM qs WHERE qid='".$fileName."'";
+
+  $result = $conn->query($sqlSolution);
+
+  if ($result->num_rows > 0) {
+      // output data of each row
+      while($row = $result->fetch_assoc()) {
+          $solution= $row["sid"];
+          $expert=$row["eid"];
+      }
+  }
+  $fileEx = explode('.', $solution);
+  $fileExt = strtolower(end($fileEx));
+
+  if(strcmp($fileExt,'mp3')==0){
+    $temp = makeAudio($solution,$expert,$temp,"Solution");
+    $textName = checkImgText($solution,0);
+    if($textName!=0){
+      $temp = makeText($textName,"^^^^^",$temp,"Solution");
+    }
+  }
+  elseif (strcmp($fileExt,'jpg')==0) {
+    $temp = makeImage($solution,$expert,$temp,"Solution");
+    $textName = checkImgText($solution,0);
+    if($textName!=0){
+      $temp = makeText($textName,"^^^^",$temp,"Solution");
+    }
+  }
+  elseif (strcmp($fileExt,'txt')==0) {
+    $temp = makeText($solution,$expert,$temp,"Solution");
+  }
+  return $temp;
+}
+
+function checkImgText($fileName,$check){
+  $servername = "localhost";
+  $username = "root";
+  $password = "";
+  $dbname = "ks";
+  // Create connection
+  $conn = new mysqli($servername, $username, $password, $dbname);
+  // Check connection
+  if ($conn->connect_error) {
+      die("Connection failed: " . $conn->connect_error);
+  }
+  if($check!=0){
+    $sql = "SELECT text_id FROM qimgtext WHERE img_id='".$fileName."'";
+  }
+  else {
+    $sql = "SELECT text_id FROM simgtext WHERE img_id='".$fileName."'";
+  }
   $result = $conn->query($sql);
 
   if ($result->num_rows > 0) {
@@ -85,40 +149,40 @@ function checkImgText($fileName){
 
 }
 
-function makeAudio($fileName,$farmerId,$temp){
+function makeAudio($fileName,$farmerId,$temp,$dir){
   $temp = $temp."
         <div class=\"media text-muted pt-3\">
           <img data-src=\"holder.js/32x32?theme=thumb&bg=e83e8c&fg=e83e8c&size=1\" alt=\"\" class=\"mr-2 rounded\">
           <p class=\"media-body pb-3 mb-0 small lh-125 border-bottom border-gray\">
             <strong class=\"d-block text-gray-dark\">@".$farmerId."</strong>
             <audio controls>
-              <source src='Question/".$fileName."' type='audio/mpeg'>
+              <source src='".$dir."/".$fileName."' type='audio/mpeg'>
             </audio>
           </p>
         </div> ";
   return $temp;
 
 }
-function makeImage($fileName,$farmerId,$temp){
+function makeImage($fileName,$farmerId,$temp,$dir){
     $temp = $temp."
         <div class=\"media text-muted pt-3\">
           <img data-src=\"holder.js/32x32?theme=thumb&bg=e83e8c&fg=e83e8c&size=1\" alt=\"\" class=\"mr-2 rounded\">
           <p class=\"media-body pb-3 mb-0 small lh-125 border-bottom border-gray\">
             <strong class=\"d-block text-gray-dark\">@".$farmerId."</strong>
-            <img src=\"Question/".$fileName."\" alt='Smiley face' height=\"100px\" width=\"100px\">
+            <img src=\"".$dir."/".$fileName."\" alt='Smiley face' height=\"100px\" width=\"100px\">
           </p>
         </div> ";
   return $temp;
   
 }
-function makeText($fileName,$farmerId,$temp){
-    $myfile = fopen("Question/".$fileName,"r") or die("Unable to open file!");
+function makeText($fileName,$farmerId,$temp,$dir){
+    $myfile = fopen($dir."/".$fileName,"r") or die("Unable to open file!");
     $temp = $temp."
         <div class=\"media text-muted pt-3\">
           <img data-src=\"holder.js/32x32?theme=thumb&bg=e83e8c&fg=e83e8c&size=1\" alt=\"\" class=\"mr-2 rounded\">
           <p class=\"media-body pb-3 mb-0 small lh-125 border-bottom border-gray\">
             <strong class=\"d-block text-gray-dark\">@".$farmerId."</strong>".
-              fread($myfile,filesize("Question/".$fileName))."
+              fread($myfile,filesize($dir."/".$fileName))."
           </p>
         </div> ";
     fclose($myfile);
