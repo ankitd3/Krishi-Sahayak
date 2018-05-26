@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: May 26, 2018 at 07:06 PM
+-- Generation Time: May 26, 2018 at 09:54 PM
 -- Server version: 10.1.30-MariaDB
 -- PHP Version: 7.2.2
 
@@ -21,6 +21,23 @@ SET time_zone = "+00:00";
 --
 -- Database: `ks`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `expert`
+--
+
+CREATE TABLE `expert` (
+  `eid` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `expert`
+--
+
+INSERT INTO `expert` (`eid`) VALUES
+(21);
 
 -- --------------------------------------------------------
 
@@ -50,16 +67,21 @@ INSERT INTO `farmer` (`fid`, `phno`, `name`, `password`) VALUES
 
 CREATE TABLE `q` (
   `qid` varchar(30) NOT NULL,
-  `fid` int(11) NOT NULL DEFAULT '1'
+  `fid` int(11) NOT NULL DEFAULT '1',
+  `solved` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `q`
 --
 
-INSERT INTO `q` (`qid`, `fid`) VALUES
-('5b0970268df125.39861510.mp3', 1),
-('5b0993baa24c01.10087531.mp3', 1);
+INSERT INTO `q` (`qid`, `fid`, `solved`) VALUES
+('5b0993baa24c01.10087531.mp3', 1, 0),
+('5b099faf079a63.61387211.jpg', 1, 1),
+('5b09a37da45132.55489314.jpg', 1, 0),
+('5b09a42fc63f48.93466102.txt', 1, 1),
+('5b09b972df7402.26437141.jpg', 1, 0),
+('5b09baeeb9b327.13333902.jpg', 1, 0);
 
 -- --------------------------------------------------------
 
@@ -77,7 +99,9 @@ CREATE TABLE `qimgtext` (
 --
 
 INSERT INTO `qimgtext` (`img_id`, `text_id`) VALUES
-('5b0970268df125.39861510.mp3', '5b0970268e8064.48918637.txt');
+('5b09a37da45132.55489314.jpg', '5b09a37da50256.91263029.txt'),
+('5b09b972df7402.26437141.jpg', '5b09b972e00fe8.05968438.txt'),
+('5b09baeeb9b327.13333902.jpg', '5b09baeeba4d11.87412015.txt');
 
 -- --------------------------------------------------------
 
@@ -87,16 +111,27 @@ INSERT INTO `qimgtext` (`img_id`, `text_id`) VALUES
 
 CREATE TABLE `qs` (
   `qid` varchar(30) NOT NULL,
-  `sid` varchar(30) NOT NULL
+  `sid` varchar(30) NOT NULL,
+  `eid` int(11) NOT NULL DEFAULT '21'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `qs`
 --
 
-INSERT INTO `qs` (`qid`, `sid`) VALUES
-('5b0970268df125.39861510.mp3', '5b0970a333fa49.52985219.jpg'),
-('5b0970268df125.39861510.mp3', '5b0973c353c3f2.96081455.jpg');
+INSERT INTO `qs` (`qid`, `sid`, `eid`) VALUES
+('5b09a42fc63f48.93466102.txt', '5b09a934a13b29.28443708.txt', 21),
+('5b099faf079a63.61387211.jpg', '5b09ae5c265ee4.09531388.txt', 21);
+
+--
+-- Triggers `qs`
+--
+DELIMITER $$
+CREATE TRIGGER `solve` AFTER INSERT ON `qs` FOR EACH ROW UPDATE q
+SET q.solved = 1
+WHERE q.qid = NEW.qid
+$$
+DELIMITER ;
 
 -- --------------------------------------------------------
 
@@ -120,6 +155,12 @@ INSERT INTO `simgtext` (`img_id`, `text_id`) VALUES
 --
 -- Indexes for dumped tables
 --
+
+--
+-- Indexes for table `expert`
+--
+ALTER TABLE `expert`
+  ADD PRIMARY KEY (`eid`);
 
 --
 -- Indexes for table `farmer`
@@ -159,6 +200,12 @@ ALTER TABLE `simgtext`
 --
 -- AUTO_INCREMENT for dumped tables
 --
+
+--
+-- AUTO_INCREMENT for table `expert`
+--
+ALTER TABLE `expert`
+  MODIFY `eid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- AUTO_INCREMENT for table `farmer`
