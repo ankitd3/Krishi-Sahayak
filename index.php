@@ -17,42 +17,51 @@ function fetchQuestion($sql,$solved){
       // output data of each row
       while($row = $result->fetch_assoc()) {
           $farmerId= $row["fid"];
-          $farmer_name = findname($farmerId,1);//1 for farmer
+          $farmer_name = findname($farmerId,1);//1 for question
           $fileName = $row["qid"];
 
           $fileEx = explode('.', $fileName);
           $fileExt = strtolower(end($fileEx));
 
+          $temp = $temp."<p onclick=\"addQid('".$fileName."')\">Click to add qid in comments form automatically</p>";
+
           if(strcmp($fileExt,'mp3')==0){
             $temp = makeAudio($fileName,$farmer_name,$temp,"Question");
-            $textName = checkImgText($fileName,1);
-            if($textName!=0){
-              $temp = makeText($textName,"^^^^^",$temp,"Question");
-            }
-            
+            // $textName = checkImgText($fileName,1);//1 for question
+            // if($textName!=0){
+            //   $temp = makeText($textName,"^^^^^",$temp,"Question");
+            // }
+            //attach solution(if any)
             if($solved!=0){
-              $temp = findsolution($fileName,$temp);
+              $temp = fetchSolution($fileName,$temp);
             }
-
+            //Attach comments(if any)
+            $temp = fetchComments($fileName,$temp);//check if there are any comments for the qid, returns an array with the filenames of comments to be included.
           }
           elseif (strcmp($fileExt,'jpg')==0) {
             $temp = makeImage($fileName,$farmer_name,$temp,"Question");
-            $textName = checkImgText($fileName,1);
+            $textName = checkImgText($fileName,1);//1 for question
             if($textName!=0){
               $temp = makeText($textName,"^^^^",$temp,"Question");
             }
             
             if($solved!=0){
-              $temp = findsolution($fileName,$temp);
+              $temp = fetchSolution($fileName,$temp);
             }
-
+            //Attach comments(if any)
+            $temp = fetchComments($fileName,$temp);
+            
           }
           elseif (strcmp($fileExt,'txt')==0) {
             $temp = makeText($fileName,$farmer_name,$temp,"Question");
             
             if($solved!=0){
-              $temp = findsolution($fileName,$temp);
+              $temp = fetchSolution($fileName,$temp);
             }
+
+            //Attach comments(if any)
+            $temp = fetchComments($fileName,$temp);
+            
           }
       }
       return $temp;
@@ -60,6 +69,62 @@ function fetchQuestion($sql,$solved){
       echo "0 results";
   }
   $conn->close();
+}
+
+function fetchComments($qid,$temp){
+
+  $myarray = array();
+
+  $servername = "localhost";
+  $username = "root";
+  $password = "";
+  $dbname = "ks";
+  // Create connection
+  $conn = new mysqli($servername, $username, $password, $dbname);
+  // Check connection
+  if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+  }
+
+  $sql = "SELECT cid,user from comments where qid = '".$qid."'";
+
+  $result = $conn->query($sql);
+
+    if ($result->num_rows > 0) {
+      // output data of each row
+      while($row = $result->fetch_assoc()) {
+          $comment= $row["cid"];
+          $user= $row["user"];
+          $myarray = array_push_assoc($myarray, $comment, $user);
+      }
+    }
+    else{
+      return $temp;
+    }
+    foreach($myarray as $comment => $user) {
+          $fileEx = explode('.', $comment);
+          $fileExt = strtolower(end($fileEx));
+          if(strcmp($fileExt,'mp3')==0){
+                  $temp = makeAudio($comment,$user,$temp,"Comment");
+          }
+          elseif (strcmp($fileExt,'jpg')==0) {
+                  $temp = makeImage($comment,$user,$temp,"Comment");
+                  $textName = checkImgText($comment,2);//2 for comments
+                  if($textName!=0){
+                    $temp = makeText($textName,"^^^^",$temp,"Comment");
+                  }
+          }
+          elseif (strcmp($fileExt,'txt')==0) {
+                  $temp = makeText($comment,$user,$temp,"Comment");
+          }
+    }
+    $conn->close();
+    return $temp;
+}
+
+function array_push_assoc($array, $key, $value){
+  $array[$key] = $value;
+  return $array;
 }
 
 function findname($id,$who){
@@ -85,21 +150,7 @@ function findname($id,$who){
   return $name;
 }
 
-function connectSql(){
-  $servername = "localhost";
-  $username = "root";
-  $password = "";
-  $dbname = "ks";
-  // Create connection
-  $conn = new mysqli($servername, $username, $password, $dbname);
-  // Check connection
-  if ($conn->connect_error) {
-      die("Connection failed: " . $conn->connect_error);
-  }
-  return $conn;
-}
-
-function findsolution($fileName,$temp){
+function fetchSolution($fileName,$temp){
   
   $conn = connectSql();
   
@@ -120,14 +171,14 @@ function findsolution($fileName,$temp){
 
   if(strcmp($fileExt,'mp3')==0){
     $temp = makeAudio($solution,$expert,$temp,"Solution");
-    $textName = checkImgText($solution,0);
-    if($textName!=0){
-      $temp = makeText($textName,"^^^^^",$temp,"Solution");
-    }
+    // $textName = checkImgText($solution,0);//0 for solution
+    // if($textName!=0){
+    //   $temp = makeText($textName,"^^^^^",$temp,"Solution");
+    // }
   }
   elseif (strcmp($fileExt,'jpg')==0) {
     $temp = makeImage($solution,$expert,$temp,"Solution");
-    $textName = checkImgText($solution,0);
+    $textName = checkImgText($solution,0);//0 for solution
     if($textName!=0){
       $temp = makeText($textName,"^^^^",$temp,"Solution");
     }
@@ -142,12 +193,16 @@ function checkImgText($fileName,$check){
   
   $conn = connectSql();
 
-  if($check!=0){
+  if($check==1){ //check in question (with img and text)
     $sql = "SELECT text_id FROM qimgtext WHERE img_id='".$fileName."'";
   }
-  else {
+  elseif($check==0) { //check in solutions (with img and text)
     $sql = "SELECT text_id FROM simgtext WHERE img_id='".$fileName."'";
   }
+  elseif($check==2) { //check in comments (with img and text)
+    $sql = "SELECT text_id FROM cimgtext WHERE img_id='".$fileName."'";
+  }
+
   $result = $conn->query($sql);
 
   if ($result->num_rows > 0) {
@@ -160,15 +215,29 @@ function checkImgText($fileName,$check){
   else{
     return 0;
   }
-
 }
 
-function makeAudio($fileName,$farmerId,$temp,$dir){
+function connectSql(){
+  $servername = "localhost";
+  $username = "root";
+  $password = "";
+  $dbname = "ks";
+  // Create connection
+  $conn = new mysqli($servername, $username, $password, $dbname);
+  // Check connection
+  if ($conn->connect_error) {
+      die("Connection failed: " . $conn->connect_error);
+  }
+  return $conn;
+}
+
+
+function makeAudio($fileName,$userId,$temp,$dir){
   $temp = $temp."
         <div class=\"media text-muted pt-3\">
           <img data-src=\"holder.js/32x32?theme=thumb&bg=e83e8c&fg=e83e8c&size=1\" alt=\"\" class=\"mr-2 rounded\">
           <p class=\"media-body pb-3 mb-0 small lh-125 border-bottom border-gray\">
-            <strong class=\"d-block text-gray-dark\">@".$farmerId."</strong>
+            <strong class=\"d-block text-gray-dark\">@".$userId."</strong>
             <audio controls>
               <source src='".$dir."/".$fileName."' type='audio/mpeg'>
             </audio>
@@ -177,25 +246,24 @@ function makeAudio($fileName,$farmerId,$temp,$dir){
   return $temp;
 
 }
-function makeImage($fileName,$farmerId,$temp,$dir){
+function makeImage($fileName,$userId,$temp,$dir){
     $temp = $temp."
         <div class=\"media text-muted pt-3\">
           <img data-src=\"holder.js/32x32?theme=thumb&bg=e83e8c&fg=e83e8c&size=1\" alt=\"\" class=\"mr-2 rounded\">
           <p class=\"media-body pb-3 mb-0 small lh-125 border-bottom border-gray\">
-            <strong class=\"d-block text-gray-dark\">@".$farmerId."</strong>
+            <strong class=\"d-block text-gray-dark\">@".$userId."</strong>
             <img src=\"".$dir."/".$fileName."\" alt='Smiley face' height=\"100px\" width=\"100px\">
           </p>
         </div> ";
   return $temp;
-  
 }
-function makeText($fileName,$farmerId,$temp,$dir){
+function makeText($fileName,$userId,$temp,$dir){
     $myfile = fopen($dir."/".$fileName,"r") or die("Unable to open file!");
     $temp = $temp."
         <div class=\"media text-muted pt-3\">
           <img data-src=\"holder.js/32x32?theme=thumb&bg=e83e8c&fg=e83e8c&size=1\" alt=\"\" class=\"mr-2 rounded\">
           <p class=\"media-body pb-3 mb-0 small lh-125 border-bottom border-gray\">
-            <strong class=\"d-block text-gray-dark\">@".$farmerId."</strong>".
+            <strong class=\"d-block text-gray-dark\">@".$userId."</strong>".
               fread($myfile,filesize($dir."/".$fileName))."
           </p>
         </div> ";
@@ -303,17 +371,50 @@ function makeText($fileName,$farmerId,$temp,$dir){
           <a href="#">All suggestions</a>
         </small>
       </div>
+
+      <!--COMMENTS BEAUTIFY IT LIKE IN testOption.html-->
+      <form action = "comments.php" enctype="multipart/form-data" method="POST">
+          <div class="form-group">
+              <input type="text" id="audioComment" name="qid">
+              <label for="audio_file">Upload audio here</label>
+              <input type="file" name="audio_file" accept = "audio/*" class="form-control-file" id="audio_file">
+          </div>
+              <button type="submit" name="submit_audio" class="btn btn-lg">Post</button>       
+      </form>
+
+      <form action = "comments.php" method="POST">
+          <div class="form-group">
+              <input type="text" id="textComment" name="qid">
+              <label for="text">Type question here</label>
+              <textarea class="form-control" name="text" rows="5" id="text"></textarea>
+          </div>
+          <button type="submit" name="submit_text" class="btn btn-lg">Post</button>       
+      </form> 
+
+      <form action = "comments.php" enctype="multipart/form-data" method="POST">
+          <div class="form-group">
+              <input type="text" id="imgComment" name="qid">
+              <label for="img_file">Upload your image here</label>
+              <input type="file" name="img_file" class="form-control-file" id="img_file">
+          </div>
+          <div class="form-group">
+              <label for="info">Question details:</label>
+              <textarea class="form-control" name="text_file" rows="5" id="info"></textarea>
+          </div>
+          <button type="submit" name="submit_img" class="btn btn-lg">Post</button>       
+      </form>
+      <!--END OF COMMENTS FORMS -->
+
     </main>
 
-    <!-- Bootstrap core JavaScript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-    <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery-slim.min.js"><\/script>')</script>
-    <script src="../../assets/js/vendor/popper.min.js"></script>
-    <script src="../../dist/js/bootstrap.min.js"></script>
-    <script src="../../assets/js/vendor/holder.min.js"></script>
-    <script src="offcanvas.js"></script>
+    <script type="text/javascript">
+        function addQid(qid){
+          document.getElementById('audioComment').value=qid;
+          document.getElementById('imgComment').value=qid;
+          document.getElementById('textComment').value=qid;          
+        }
+    </script>
+
   </body>
 </html>
 

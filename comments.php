@@ -1,8 +1,5 @@
 <?php
 
-date_default_timezone_set('Asia/Kolkata');
-$current_datetime = date('Y-m-d H:i:s');
-
 if(isset($_POST['submit_text'])||isset($_POST['submit_img'])||isset($_POST['submit_audio'])){
 
 	if(isset($_POST['submit_audio']) && is_uploaded_file($_FILES['audio_file']['tmp_name'])){
@@ -19,22 +16,22 @@ if(isset($_POST['submit_text'])||isset($_POST['submit_img'])||isset($_POST['subm
 		$allowed = array('mp3','ogg'); //accepted file types
 
 		if(in_array($fileExt, $allowed)){
-			$dir='Question/';
+			$dir='Comment/';
 			$fileNewName = uniqid('',true).".".$fileExt;
 			$path=$dir.basename($fileNewName);
 			if(move_uploaded_file($fileTempName, $path)){
 				echo "UPLOAD";
 				insertdb(basename($fileNewName)); //Insert into questions table (only qid as of now)
-				$var="<audio controls>
-					<source src='".$path."' type='audio/mpeg'>
-				</audio>";  //displays the audio file in html
+				// $var="<audio controls>
+				// 	<source src='".$path."' type='audio/mpeg'>
+				// </audio>";  //displays the audio file in html
 			}
 		}else{
-			$var="Incompatible File type";
+			echo "Incompatible File type";
 		}
 
 	}
-	elseif (isset($_POST['submit_audio']) && is_uploaded_file($_FILES['img_file']['tmp_name'])) {
+	elseif (isset($_POST['submit_img']) && is_uploaded_file($_FILES['img_file']['tmp_name'])) {
 		//upload the file to folder Question
 		//Update the q relation with qid
 		$file=$_FILES['img_file']; //audio/image file from the form
@@ -49,16 +46,16 @@ if(isset($_POST['submit_text'])||isset($_POST['submit_img'])||isset($_POST['subm
 		$allowed = array('jpeg','jpg'); //accepted file types
 
 		if(in_array($fileExt, $allowed)){
-			$dir='Question/';
+			$dir='Comment/';
 			$fileNewName = uniqid('',true).".".$fileExt;
 			$path=$dir.basename($fileNewName);
 			if(move_uploaded_file($fileTempName, $path)){
 				echo "UPLOAD";
 				insertdb(basename($fileNewName)); //Insert into questions table (only qid as of now)
-				$var="<img src=".$path." alt='Smiley face'>"; //displays image in html
+				// $var="<img src=".$path." alt='Smiley face'>"; //displays image in html
 			}
 		}else{
-			$var="Incompatible File type";
+			echo "Incompatible File type";
 		}
 
 		if(!empty($_POST['text_file'])){			
@@ -73,7 +70,7 @@ if(isset($_POST['submit_text'])||isset($_POST['submit_img'])||isset($_POST['subm
 			}
 		}
 	elseif (!empty($_POST['text'])) {
-		$dir='Question/';
+		$dir='Comment/';
 		$fileName = uniqid('',true).".txt";
 		$fileNewName = $dir.$fileName;
 		$var = $_POST['text'];
@@ -96,7 +93,7 @@ function insertImgText($text,$img){
 	    die("Connection failed: " . $conn->connect_error);
 	} 
 
-	$sql = "INSERT INTO qimgtext (img_id,text_id) VALUES ('".$img."','".$text."')";
+	$sql = "INSERT INTO cimgtext (img_id,text_id) VALUES ('".$img."','".$text."')";
 
 	if ($conn->query($sql) === TRUE) {
 	    echo "New record created successfully";
@@ -108,7 +105,10 @@ function insertImgText($text,$img){
 	}
 
 
-function insertdb($question){
+function insertdb($comment){
+
+	$qid = $_POST['qid'];
+
 	$servername = "localhost";
 	$username = "root";
 	$password = "";
@@ -121,7 +121,7 @@ function insertdb($question){
 	    die("Connection failed: " . $conn->connect_error);
 	} 
 
-	$sql = "INSERT INTO q (qid) VALUES ('".$question."')";
+	$sql = "INSERT INTO comments (qid,cid) VALUES ('".$qid."','".$comment."')";
 
 	if ($conn->query($sql) === TRUE) {
 	    echo "New record created successfully";
@@ -133,15 +133,3 @@ function insertdb($question){
 	}
 
 ?>
-
-<!DOCTYPE html>
-<html>
-<head>
-	<title></title>
-</head>
-<body>
-
- <?php echo $var;?>
-
-</body>
-</html>
