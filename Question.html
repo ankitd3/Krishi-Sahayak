@@ -61,9 +61,10 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="info">Question details:</label>
+                                    <label onclick="start('info');">----Audio</label>
                                     <textarea class="form-control" name="text_file" rows="5" id="info"></textarea>
                                 </div>
-                                <button type="submit" name="submit_img" class="btn btn-lg">Post</button>       
+                                <button type="submit" name="submit_img" class="btn btn-lg">Post</button>
                             </form>
                         </div>
                     </div>
@@ -82,6 +83,7 @@
                             <form action = "Question.php" method="POST">
                                 <div class="form-group">
                                     <label for="text">Type question here</label>
+                                    <label onclick="start('text');">-----Audio</label>
                                     <textarea class="form-control" name="text" rows="5" id="text"></textarea>
                                 </div>
                                 <button type="submit" name="submit_text" class="btn btn-lg">Post</button>       
@@ -92,5 +94,42 @@
             </div>
         </div>
     </div>
+
+    <script type="text/javascript">
+
+            function start (id) {
+
+                var r = document.getElementById(id);
+
+                if('webkitSpeechRecognition' in window){
+                    var speechRecognizer = new webkitSpeechRecognition();
+                    speechRecognizer.continuous = true;
+                    speechRecognizer.interimResults = true;
+                    speechRecognizer.lang = 'hi';
+                    speechRecognizer.start();
+
+                    var finalTranscripts = '';
+
+                    speechRecognizer.onresult = function(event){
+                        var interimTranscripts = '';
+                        for(var i = event.resultIndex; i < event.results.length; i++){
+                            var transcript = event.results[i][0].transcript;
+                            transcript.replace("\n", "<br>");
+                            if(event.results[i].isFinal){
+                                finalTranscripts += transcript;
+                            }else{
+                                interimTranscripts += transcript;
+                            }
+                        }
+                        r.innerHTML = finalTranscripts + interimTranscripts;
+                    };
+                    speechRecognizer.onerror = function (event) {
+                    };
+                }else{
+                    r.innerHTML = 'Your browser is not supported. If google chrome, please upgrade!';
+                }
+            }
+
+    </script>
 </body>
 </html>                                		                            
