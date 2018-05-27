@@ -1,110 +1,96 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
-
-    <title>KS</title>
-    <link href="css/style.css" rel="stylesheet">
-  </head>
-
-  <body class="bg-light">
-
-    <nav class="navbar navbar-expand-lg fixed-top navbar-dark bg-dark">
-      <a class="navbar-brand mr-auto mr-lg-0" href="#">Krishi Sahayak</a>
-      <button class="navbar-toggler p-0 border-0" type="button" data-toggle="offcanvas">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-
-      <div class="navbar-collapse offcanvas-collapse" id="navbarsExampleDefault">
-        <ul class="navbar-nav mr-auto">
-          <li class="nav-item active">
-            <a class="nav-link" href="#">Questions <span class="sr-only">(current)</span></a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Notifications</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Friends <span class="badge badge-pill bg-light align-text-bottom">27</span></a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Profile</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Switch account</a>
-          </li>
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">LANGUAGE</a>
-            <div class="dropdown-menu" aria-labelledby="dropdown01">
-              <a class="dropdown-item" href="#">Action</a>
-              <a class="dropdown-item" href="#">Another action</a>
-              <a class="dropdown-item" href="#">Something else here</a>
-            </div>
-          </li>
-        </ul>
-        <form class="form-inline my-2 my-lg-0">
-          <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
-          <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-        </form>
-      </div>
-    </nav>
-
-    <div class="nav-scroller bg-white box-shadow">
-      <nav class="nav nav-underline">
-        <a class="nav-link active" href="#">TAGS</a>
-        
-        <a class="nav-link" href="#">Crops</a>
-        <a class="nav-link" href="#">Soil</a>
-        <a class="nav-link" href="#">Weather</a>
-        <a class="nav-link" href="#">Irrigation</a>
-        <a class="nav-link" href="#">Fertilizers</a>
-        <a class="nav-link" href="#">Loans</a>
-        <a class="nav-link" href="#">Seeds</a>
-      </nav>
-    </div>
-
-    <main role="main" class="container">
-      <div class="d-flex align-items-center p-3 my-3 text-white-50 bg-purple rounded box-shadow">
-        <img class="mr-3" src="Images/q.png" alt="" width="48" height="48">
-        <div class="lh-100">
-          <h6 class="mb-0 text-white lh-100">ASK QUESTIONS</h6>
-          <small>VOICE NOTES - TEXT - IMAGES</small>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Example of Bootstrap 3 Accordion</title>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<link rel = "stylesheet" href = "css/option.css">
+</head>
+<body>
+    <div class = "container">
+        <br>
+        <div class = "container text-center">
+            <h1>Krishi Sahayak</h1>
         </div>
-      </div>
-
-      <div class="my-3 p-3 bg-white rounded box-shadow">
-
-
-    <form class="form-group" action="Question.php" method="POST" enctype="multipart/form-data">
-      
-      <label>AUDIO / IMAGE</label>
-      <input type="file" name="audio_img_file">
-    
-    <br><hr><br>
-
-      <label>TEXT</label>
-      <input type="text" name="text">
-
-      <input class="btn btn-primary" type="submit" name="submit_q" value="UPLOAD">
-    </form>
-      </div>
-
-
-    </main>
-
-    <!-- Bootstrap core JavaScript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-    <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery-slim.min.js"><\/script>')</script>
-    <script src="../../assets/js/vendor/popper.min.js"></script>
-    <script src="../../dist/js/bootstrap.min.js"></script>
-    <script src="../../assets/js/vendor/holder.min.js"></script>
-    <script src="offcanvas.js"></script>
-  </body>
-</html>
-
+        <hr>
+        <br>
+        <h2 class = "text-center">Upload your question here</h2>
+        <div class="bs-example">
+            <div class="panel-group" id="accordion">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+                                    <i class="fa fa-microphone" aria-hidden="true"></i>
+                                    Upload through audio
+                            </a>
+                        </h4>
+                    </div>
+                    <div id="collapseOne" class="panel-collapse collapse in">
+                        <div class="panel-body">
+                            <form action = "testQuestion.php" enctype="multipart/form-data" method="POST">
+                                <div class="form-group">
+                                    <label for="audio_file">Upload audio here</label>
+                                    <input type="file" name="audio_file" accept = "audio/*" class="form-control-file" id="audio_file">
+                                </div>
+                                    <button type="submit" name="submit_audio" class="btn btn-lg">Post</button>       
+                            </form>    
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">
+                                <i class="fa fa-camera" aria-hidden="true"></i>
+                                Upload through image/text 
+                            </a>
+                        </h4>
+                    </div>
+                    <div id="collapseTwo" class="panel-collapse collapse">
+                        <div class="panel-body">
+                            <form action = "testQuestion.php" enctype="multipart/form-data" method="POST">
+                                <div class="form-group">
+                                    <label for="img_file">Upload your image here</label>
+                                    <input type="file" name="img_file" class="form-control-file" id="img_file">
+                                </div>
+                                <div class="form-group">
+                                    <label for="info">Question details:</label>
+                                    <textarea class="form-control" name="text_file" rows="5" id="info"></textarea>
+                                </div>
+                                <button type="submit" name="submit_img" class="btn btn-lg">Post</button>       
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <a data-toggle="collapse" data-parent="#accordion" href="#collapseThree">
+                                <i class="fa fa-keyboard" aria-hidden="true"></i>
+                                Upload through text
+                            </a>
+                        </h4>
+                    </div>
+                    <div id="collapseThree" class="panel-collapse collapse">
+                        <div class="panel-body">
+                            <form action = "testQuestion.php" method="POST">
+                                <div class="form-group">
+                                    <label for="text">Type question here</label>
+                                    <textarea class="form-control" name="text" rows="5" id="text"></textarea>
+                                </div>
+                                <button type="submit" name="submit_text" class="btn btn-lg">Post</button>       
+                            </form>  
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>                                		                            

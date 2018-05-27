@@ -3,36 +3,28 @@
 $sqlSolved = "SELECT * FROM q WHERE solved = 1";
 $sqlUnsolved = "SELECT * FROM q WHERE solved = 0";
 
-$solved = fetchsql($sqlSolved,1);
-$unsolved = fetchsql($sqlUnsolved,0);
+$solved = fetchQuestion($sqlSolved,1);
+$unsolved = fetchQuestion($sqlUnsolved,0);
 
-function fetchsql($sql,$solved){
+function fetchQuestion($sql,$solved){
   $temp = "";
 
-  $servername = "localhost";
-  $username = "root";
-  $password = "";
-  $dbname = "ks";
+  $conn = connectSql();
 
-  // Create connection
-  $conn = new mysqli($servername, $username, $password, $dbname);
-  // Check connection
-  if ($conn->connect_error) {
-      die("Connection failed: " . $conn->connect_error);
-  }
   $result = $conn->query($sql);
 
   if ($result->num_rows > 0) {
       // output data of each row
       while($row = $result->fetch_assoc()) {
           $farmerId= $row["fid"];
+          $farmer_name = findname($farmerId,1);//1 for farmer
           $fileName = $row["qid"];
 
           $fileEx = explode('.', $fileName);
           $fileExt = strtolower(end($fileEx));
 
           if(strcmp($fileExt,'mp3')==0){
-            $temp = makeAudio($fileName,$farmerId,$temp,"Question");
+            $temp = makeAudio($fileName,$farmer_name,$temp,"Question");
             $textName = checkImgText($fileName,1);
             if($textName!=0){
               $temp = makeText($textName,"^^^^^",$temp,"Question");
@@ -44,7 +36,7 @@ function fetchsql($sql,$solved){
 
           }
           elseif (strcmp($fileExt,'jpg')==0) {
-            $temp = makeImage($fileName,$farmerId,$temp,"Question");
+            $temp = makeImage($fileName,$farmer_name,$temp,"Question");
             $textName = checkImgText($fileName,1);
             if($textName!=0){
               $temp = makeText($textName,"^^^^",$temp,"Question");
@@ -56,7 +48,7 @@ function fetchsql($sql,$solved){
 
           }
           elseif (strcmp($fileExt,'txt')==0) {
-            $temp = makeText($fileName,$farmerId,$temp,"Question");
+            $temp = makeText($fileName,$farmer_name,$temp,"Question");
             
             if($solved!=0){
               $temp = findsolution($fileName,$temp);
@@ -70,8 +62,30 @@ function fetchsql($sql,$solved){
   $conn->close();
 }
 
-function findsolution($fileName,$temp){
-  
+function findname($id,$who){
+
+  if($who==1){
+    $sql = "SELECT name from farmer where fid = '".$id."'";
+  }
+  elseif ($who==2) {
+    $sql = "SELECT name from expert where eid = '".$id."'";
+  }
+  $conn = connectSql();
+
+  $result = $conn->query($sql);
+
+  if ($result->num_rows > 0) {
+      // output data of each row
+      while($row = $result->fetch_assoc()) {
+          $name= $row["name"];
+      }
+  }
+  $conn->close();
+
+  return $name;
+}
+
+function connectSql(){
   $servername = "localhost";
   $username = "root";
   $password = "";
@@ -82,6 +96,12 @@ function findsolution($fileName,$temp){
   if ($conn->connect_error) {
       die("Connection failed: " . $conn->connect_error);
   }
+  return $conn;
+}
+
+function findsolution($fileName,$temp){
+  
+  $conn = connectSql();
   
   $sqlSolution = "SELECT sid,eid FROM qs WHERE qid='".$fileName."'";
 
@@ -91,7 +111,8 @@ function findsolution($fileName,$temp){
       // output data of each row
       while($row = $result->fetch_assoc()) {
           $solution= $row["sid"];
-          $expert=$row["eid"];
+          $eid=$row["eid"];
+          $expert = findname($eid,2);//2 identifies an expert
       }
   }
   $fileEx = explode('.', $solution);
@@ -118,16 +139,9 @@ function findsolution($fileName,$temp){
 }
 
 function checkImgText($fileName,$check){
-  $servername = "localhost";
-  $username = "root";
-  $password = "";
-  $dbname = "ks";
-  // Create connection
-  $conn = new mysqli($servername, $username, $password, $dbname);
-  // Check connection
-  if ($conn->connect_error) {
-      die("Connection failed: " . $conn->connect_error);
-  }
+  
+  $conn = connectSql();
+
   if($check!=0){
     $sql = "SELECT text_id FROM qimgtext WHERE img_id='".$fileName."'";
   }
