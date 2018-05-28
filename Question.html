@@ -61,7 +61,24 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="info">Question details:</label>
-                                    <label onclick="start('info');">----Audio</label>
+                                    <label onclick="start('info');">----<b>Audio<b></label>
+                                    	<select onchange="changeLanguage('lang_img_text');" id="lang_img_text">
+										  <option value="mr">Marathi</option>
+										  <option value="hi">Hindi</option>
+										  <option value="en-IN">English</option>
+										  <option value="ml">Malayalam</option>
+										  <option value="te">Telugu</option>
+										  <option value="gu">Gujarati</option>
+										  <option value="as">Assamese</option>
+										  <option value="bn">Bengali</option>
+										  <option value="as">Assamese</option>
+										  <option value="or">Oriya</option>
+										  <option value="pa">Punjabi</option>
+										  <option value="sa">Sanskrit</option>
+										  <option value="sd">Sindhi</option>
+										  <option value="sa">Sanskrit</option>
+										  <option value="ur">Urdu</option>
+										</select>
                                     <textarea class="form-control" name="text_file" rows="5" id="info"></textarea>
                                 </div>
                                 <button type="submit" name="submit_img" class="btn btn-lg">Post</button>
@@ -83,7 +100,24 @@
                             <form action = "Question.php" method="POST">
                                 <div class="form-group">
                                     <label for="text">Type question here</label>
-                                    <label onclick="start('text');">-----Audio</label>
+                                    <label onclick="start('text');">-----<b>Audio<b></label>
+                                    	<select onchange="changeLanguage('lang_text');" id="lang_text">
+										  <option value="mr">Marathi</option>
+										  <option value="hi">Hindi</option>
+										  <option value="en-IN">English</option>
+										  <option value="ml">Malayalam</option>
+										  <option value="te">Telugu</option>
+										  <option value="gu">Gujarati</option>
+										  <option value="as">Assamese</option>
+										  <option value="bn">Bengali</option>
+										  <option value="as">Assamese</option>
+										  <option value="or">Oriya</option>
+										  <option value="pa">Punjabi</option>
+										  <option value="sa">Sanskrit</option>
+										  <option value="sd">Sindhi</option>
+										  <option value="sa">Sanskrit</option>
+										  <option value="ur">Urdu</option>
+										</select>
                                     <textarea class="form-control" name="text" rows="5" id="text"></textarea>
                                 </div>
                                 <button type="submit" name="submit_text" class="btn btn-lg">Post</button>       
@@ -97,6 +131,13 @@
 
     <script type="text/javascript">
 
+    		var lang;
+
+    		function changeLanguage (l){
+    			var x = document.getElementById(l);
+    			lang = x.value;
+    		}
+
             function start (id) {
 
                 var r = document.getElementById(id);
@@ -105,7 +146,7 @@
                     var speechRecognizer = new webkitSpeechRecognition();
                     speechRecognizer.continuous = true;
                     speechRecognizer.interimResults = true;
-                    speechRecognizer.lang = 'hi';
+                    speechRecognizer.lang = lang;
                     speechRecognizer.start();
 
                     var finalTranscripts = '';
