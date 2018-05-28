@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en-US">
 <head>
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -16,6 +16,7 @@
         <br>
         <div class = "container text-center">
             <h1>Krishi Sahayak</h1>
+            <div id="google_translate_element">hi</div>
         </div>
         <hr>
         <br>
@@ -170,7 +171,14 @@
                     r.innerHTML = 'Your browser is not supported. If google chrome, please upgrade!';
                 }
             }
-
     </script>
+
+    <script type="text/javascript">
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({pageLanguage: 'en'}, 'google_translate_element');
+    }
+    </script>
+
+    <script src="http://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 </body>
 </html>                                		                            
