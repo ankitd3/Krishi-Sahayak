@@ -19,13 +19,19 @@ function fetchQuestion($sql,$solved){
           $farmerId= $row["fid"];
           $farmer_name = findname($farmerId,1);//1 for question
           $fileName = $row["qid"];
-
           $fileEx = explode('.', $fileName);
           $fileExt = strtolower(end($fileEx));
 
+          //array of tags returned for the question
+          $tags = fetchTags($fileName);
+
+          //Enable commenting by clicking on it
           $temp = $temp."<p onclick=\"addQid('".$fileName."')\">Click to add qid in comments form automatically</p>";
 
           if(strcmp($fileExt,'mp3')==0){
+
+            $temp = attachTags($tags,$temp);
+
             $temp = makeAudio($fileName,$farmer_name,$temp,"Question");
             // $textName = checkImgText($fileName,1);//1 for question
             // if($textName!=0){
@@ -39,6 +45,9 @@ function fetchQuestion($sql,$solved){
             $temp = fetchComments($fileName,$temp);//check if there are any comments for the qid, returns an array with the filenames of comments to be included.
           }
           elseif (strcmp($fileExt,'jpg')==0) {
+
+            $temp = attachTags($tags,$temp);
+
             $temp = makeImage($fileName,$farmer_name,$temp,"Question");
             $textName = checkImgText($fileName,1);//1 for question
             if($textName!=0){
@@ -53,6 +62,9 @@ function fetchQuestion($sql,$solved){
             
           }
           elseif (strcmp($fileExt,'txt')==0) {
+
+            $temp = attachTags($tags,$temp);
+
             $temp = makeText($fileName,$farmer_name,$temp,"Question");
             
             if($solved!=0){
@@ -61,30 +73,47 @@ function fetchQuestion($sql,$solved){
 
             //Attach comments(if any)
             $temp = fetchComments($fileName,$temp);
-            
           }
       }
       return $temp;
   } else {
       echo "0 results";
   }
+
   $conn->close();
+}
+
+function fetchTags($qid){
+  $tags = array();
+  $conn = connectSql();
+  $sql = "SELECT tag from q_tag where qid = '".$qid."'";
+  $result = $conn->query($sql);
+    if ($result->num_rows > 0) {
+      // output data of each row
+      while($row = $result->fetch_assoc()) {
+          $tag= $row["tag"];
+          array_push($tags, $tag);
+      }
+    }
+  return $tags;
+}
+
+function attachTags($tags,$temp){
+
+    $length = count($tags);
+
+    for($x = 0; $x < $length; $x++) {
+      $temp = $temp . "<label>".$tags[$x]."</label>";
+    }
+
+    return $temp;
 }
 
 function fetchComments($qid,$temp){
 
   $myarray = array();
 
-  $servername = "localhost";
-  $username = "root";
-  $password = "";
-  $dbname = "ks";
-  // Create connection
-  $conn = new mysqli($servername, $username, $password, $dbname);
-  // Check connection
-  if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-  }
+  $conn = connectSql();
 
   $sql = "SELECT cid,user from comments where qid = '".$qid."'";
 
@@ -252,7 +281,7 @@ function makeImage($fileName,$userId,$temp,$dir){
           <img data-src=\"holder.js/32x32?theme=thumb&bg=e83e8c&fg=e83e8c&size=1\" alt=\"\" class=\"mr-2 rounded\">
           <p class=\"media-body pb-3 mb-0 small lh-125 border-bottom border-gray\">
             <strong class=\"d-block text-gray-dark\">@".$userId."</strong>
-            <img src=\"".$dir."/".$fileName."\" alt='Smiley face' height=\"100px\" width=\"100px\">
+            <img src=\"".$dir."/".$fileName."\" class=\"thumbnail\" alt='Smiley face' height=\"100px\" width=\"100px\">
           </p>
         </div> ";
   return $temp;
@@ -283,13 +312,14 @@ function makeText($fileName,$userId,$temp,$dir){
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
 
     <title>KS</title>
+    <link href="imp.css" rel="stylesheet">
     <link href="css/style.css" rel="stylesheet">
   </head>
 
   <body class="bg-light">
 
     <nav class="navbar navbar-expand-lg fixed-top navbar-dark bg-dark">
-      <a class="navbar-brand mr-auto mr-lg-0" href="#">Krishi Sahayak</a>
+      <a class="navbar-brand mr-auto mr-lg-0" href="#">Krishi Sahayak</a><div id="google_translate_element">hi</div>
       <button class="navbar-toggler p-0 border-0" type="button" data-toggle="offcanvas">
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -414,6 +444,14 @@ function makeText($fileName,$userId,$temp,$dir){
           document.getElementById('textComment').value=qid;          
         }
     </script>
+
+    <script type="text/javascript">
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({pageLanguage: 'en'}, 'google_translate_element');
+    }
+    </script>
+
+    <script src="http://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
   </body>
 </html>
