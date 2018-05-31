@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: May 27, 2018 at 10:19 AM
+-- Generation Time: May 31, 2018 at 01:51 PM
 -- Server version: 10.1.30-MariaDB
 -- PHP Version: 7.2.2
 
@@ -25,6 +25,29 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `cimgtext`
+--
+
+CREATE TABLE `cimgtext` (
+  `img_id` varchar(30) NOT NULL,
+  `text_id` varchar(30) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `comments`
+--
+
+CREATE TABLE `comments` (
+  `qid` varchar(30) NOT NULL,
+  `cid` varchar(30) NOT NULL,
+  `user` int(11) NOT NULL DEFAULT '99'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `expert`
 --
 
@@ -38,7 +61,7 @@ CREATE TABLE `expert` (
 --
 
 INSERT INTO `expert` (`eid`, `name`) VALUES
-(51, 'Expert1');
+(21, 'Expert1');
 
 -- --------------------------------------------------------
 
@@ -58,7 +81,7 @@ CREATE TABLE `farmer` (
 --
 
 INSERT INTO `farmer` (`fid`, `phno`, `name`, `password`) VALUES
-(1, 9167634684, 'Chippy', 'namita');
+(1, 9167634684, 'Anuj', 'namita');
 
 -- --------------------------------------------------------
 
@@ -71,6 +94,14 @@ CREATE TABLE `q` (
   `fid` int(11) NOT NULL DEFAULT '1',
   `solved` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `q`
+--
+
+INSERT INTO `q` (`qid`, `fid`, `solved`) VALUES
+('5b0f9fb4004648.55800097.txt', 1, 0),
+('5b0faf35cfb8a6.00483659.txt', 1, 0);
 
 -- --------------------------------------------------------
 
@@ -108,6 +139,25 @@ DELIMITER ;
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `q_tag`
+--
+
+CREATE TABLE `q_tag` (
+  `tag` varchar(10) NOT NULL,
+  `qid` varchar(30) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `q_tag`
+--
+
+INSERT INTO `q_tag` (`tag`, `qid`) VALUES
+('Crop', '5b0f9fb4004648.55800097.txt'),
+('Soil', '5b0f9fb4004648.55800097.txt');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `simgtext`
 --
 
@@ -116,9 +166,44 @@ CREATE TABLE `simgtext` (
   `text_id` varchar(30) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tags`
+--
+
+CREATE TABLE `tags` (
+  `tag` varchar(10) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `tags`
+--
+
+INSERT INTO `tags` (`tag`) VALUES
+('Crop'),
+('Fruits'),
+('Seeds'),
+('Soil'),
+('Weather');
+
 --
 -- Indexes for dumped tables
 --
+
+--
+-- Indexes for table `cimgtext`
+--
+ALTER TABLE `cimgtext`
+  ADD PRIMARY KEY (`img_id`),
+  ADD KEY `img_id` (`img_id`);
+
+--
+-- Indexes for table `comments`
+--
+ALTER TABLE `comments`
+  ADD PRIMARY KEY (`cid`),
+  ADD KEY `qid` (`qid`);
 
 --
 -- Indexes for table `expert`
@@ -155,11 +240,24 @@ ALTER TABLE `qs`
   ADD KEY `qid` (`qid`);
 
 --
+-- Indexes for table `q_tag`
+--
+ALTER TABLE `q_tag`
+  ADD KEY `qid` (`qid`),
+  ADD KEY `tag` (`tag`);
+
+--
 -- Indexes for table `simgtext`
 --
 ALTER TABLE `simgtext`
   ADD PRIMARY KEY (`img_id`),
   ADD KEY `img_id` (`img_id`);
+
+--
+-- Indexes for table `tags`
+--
+ALTER TABLE `tags`
+  ADD PRIMARY KEY (`tag`);
 
 --
 -- AUTO_INCREMENT for dumped tables
@@ -169,7 +267,7 @@ ALTER TABLE `simgtext`
 -- AUTO_INCREMENT for table `expert`
 --
 ALTER TABLE `expert`
-  MODIFY `eid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=52;
+  MODIFY `eid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- AUTO_INCREMENT for table `farmer`
@@ -180,6 +278,18 @@ ALTER TABLE `farmer`
 --
 -- Constraints for dumped tables
 --
+
+--
+-- Constraints for table `cimgtext`
+--
+ALTER TABLE `cimgtext`
+  ADD CONSTRAINT `comments_img_text_fk` FOREIGN KEY (`img_id`) REFERENCES `comments` (`cid`);
+
+--
+-- Constraints for table `comments`
+--
+ALTER TABLE `comments`
+  ADD CONSTRAINT `comments_question_fk` FOREIGN KEY (`qid`) REFERENCES `q` (`qid`);
 
 --
 -- Constraints for table `q`
@@ -198,6 +308,13 @@ ALTER TABLE `qimgtext`
 --
 ALTER TABLE `qs`
   ADD CONSTRAINT `question_qid_fk` FOREIGN KEY (`qid`) REFERENCES `q` (`qid`);
+
+--
+-- Constraints for table `q_tag`
+--
+ALTER TABLE `q_tag`
+  ADD CONSTRAINT `q_tag_fk` FOREIGN KEY (`qid`) REFERENCES `q` (`qid`),
+  ADD CONSTRAINT `tag_fk` FOREIGN KEY (`tag`) REFERENCES `tags` (`tag`);
 
 --
 -- Constraints for table `simgtext`
