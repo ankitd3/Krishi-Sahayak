@@ -1,5 +1,7 @@
 <?php
 
+$tag = $_GET['tag'];
+
 $servername = "localhost";
 $username = "root";
 $password = "";
@@ -11,8 +13,8 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 //$sqlSolved = "SELECT qid,sid FROM qs WHERE qid in (select qid from q where q\.solved = 1)";
-$sqlSolved = "SELECT * FROM q WHERE solved = 1";
-$sqlUnsolved = "SELECT * FROM q WHERE solved = 0";
+$sqlSolved = "SELECT * FROM q WHERE (solved = 1) AND qid IN (SELECT qid FROM q_tag WHERE tag = '".$tag."')";
+$sqlUnsolved = "SELECT * FROM q WHERE (solved = 0) AND qid IN (SELECT qid FROM q_tag WHERE tag = '".$tag."')";
 
 $allowedAudio = array('mp3','ogg'); //accepted file types
 $allowedImage = array('jpeg','jpg','png'); //accepted file types
