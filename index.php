@@ -60,7 +60,6 @@ function fetchQuestion($sql,$solved){
             $temp = makeText($fileName,$farmer_name,$temp,"Question");
           }
 
-
           //attach solution(if any)
           if($solved!=0){
             $temp = fetchSolution($fileName,$temp);
