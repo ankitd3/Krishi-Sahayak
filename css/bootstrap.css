@@ -1,0 +1,22 @@
+.navbar{
+    font-family: 'Roboto', sans-serif;
+    background-color: #2b5e40;
+    color: #FAFEF9;
+    font-weight: 400px;
+
+}
+
+body{
+    background-color: #FAFEF9;
+}
+
+a.nav-link{
+    color: #FAFEF9;
+}
+
+li:hover{
+    background-color: #FAFEF9;
+}
+a.nav-link:hover{
+    color: black;
+}
