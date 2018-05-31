@@ -13,7 +13,6 @@
   </head>
 
   <body class="bg-light">
-
     <nav class="navbar navbar-expand-lg fixed-top navbar-dark bg-dark">
       <a class="navbar-brand mr-auto mr-lg-0" href="#">Krishi Sahayak Expert</a>
       <button class="navbar-toggler p-0 border-0" type="button" data-toggle="offcanvas">
@@ -79,8 +78,9 @@
       <div class="my-3 p-3 bg-white rounded box-shadow">
 
 		<form class="form-group" action="testSolution.php" method="POST" enctype="multipart/form-data">
-      
-      <input type="text" name="qid">
+
+      <!--IMPORTANT-->
+      <input type="text" name="qid" value=<?php echo $_GET['qid'];?>>
 
       <label>AUDIO / IMAGE</label>
       <input type="file" name="audio_img_file">
