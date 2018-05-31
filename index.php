@@ -1,17 +1,29 @@
 <?php
+
+$servername = "localhost";
+$username = "root";
+$password = "";
+$dbname = "ks";
+// Create connection
+$conn = new mysqli($servername, $username, $password, $dbname);
+// Check connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
 //$sqlSolved = "SELECT qid,sid FROM qs WHERE qid in (select qid from q where q\.solved = 1)";
 $sqlSolved = "SELECT * FROM q WHERE solved = 1";
 $sqlUnsolved = "SELECT * FROM q WHERE solved = 0";
 
-$solved = fetchQuestion($sqlSolved,1);
-$unsolved = fetchQuestion($sqlUnsolved,0);
+$allowedAudio = array('mp3','ogg'); //accepted file types
+$allowedImage = array('jpeg','jpg','png'); //accepted file types
+
+$solved = fetchQuestion($sqlSolved,1);//1-Solved
+$unsolved = fetchQuestion($sqlUnsolved,0);//0-Solved
 
 function fetchQuestion($sql,$solved){
   $temp = "";
 
-  $conn = connectSql();
-
-  $result = $conn->query($sql);
+  $result = $GLOBALS['conn']->query($sql);
 
   if ($result->num_rows > 0) {
       // output data of each row
@@ -21,73 +33,51 @@ function fetchQuestion($sql,$solved){
           $fileName = $row["qid"];
           $fileEx = explode('.', $fileName);
           $fileExt = strtolower(end($fileEx));
-
+          //Enable commenting by clicking on it and go to comment section
+          $temp = $temp."<a href='#comment' <p onclick=\"addQid('".$fileName."')\">Click to add qid in comments form automatically</p></a>";
           //array of tags returned for the question
           $tags = fetchTags($fileName);
+          $temp = attachTags($tags,$temp);
 
-          //Enable commenting by clicking on it
-          $temp = $temp."<p onclick=\"addQid('".$fileName."')\">Click to add qid in comments form automatically</p>";
+          if(in_array($fileExt, $GLOBALS['allowedAudio'])){
 
-          if(strcmp($fileExt,'mp3')==0){
-
-            $temp = attachTags($tags,$temp);
-
-            $temp = makeAudio($fileName,$farmer_name,$temp,"Question");
+            $temp = makeAudio($fileName,$farmer_name,$temp,"Question");//Question-Dir name
             // $textName = checkImgText($fileName,1);//1 for question
             // if($textName!=0){
             //   $temp = makeText($textName,"^^^^^",$temp,"Question");
             // }
-            //attach solution(if any)
-            if($solved!=0){
-              $temp = fetchSolution($fileName,$temp);
-            }
-            //Attach comments(if any)
-            $temp = fetchComments($fileName,$temp);//check if there are any comments for the qid, returns an array with the filenames of comments to be included.
           }
-          elseif (strcmp($fileExt,'jpg')==0) {
-
-            $temp = attachTags($tags,$temp);
+          elseif (in_array($fileExt, $GLOBALS['allowedImage'])) {
 
             $temp = makeImage($fileName,$farmer_name,$temp,"Question");
             $textName = checkImgText($fileName,1);//1 for question
             if($textName!=0){
               $temp = makeText($textName,"^^^^",$temp,"Question");
-            }
-            
-            if($solved!=0){
-              $temp = fetchSolution($fileName,$temp);
-            }
-            //Attach comments(if any)
-            $temp = fetchComments($fileName,$temp);
-            
+            }       
           }
+
           elseif (strcmp($fileExt,'txt')==0) {
-
-            $temp = attachTags($tags,$temp);
-
             $temp = makeText($fileName,$farmer_name,$temp,"Question");
-            
-            if($solved!=0){
-              $temp = fetchSolution($fileName,$temp);
-            }
-
-            //Attach comments(if any)
-            $temp = fetchComments($fileName,$temp);
           }
+
+
+          //attach solution(if any)
+          if($solved!=0){
+            $temp = fetchSolution($fileName,$temp);
+          }
+          //Attach comments(if any)
+          $temp = fetchComments($fileName,$temp);//check if there are any comments for the qid, returns an array with the filenames of comments to be included.
       }
       return $temp;
   } else {
       echo "0 results";
   }
-
-  $conn->close();
 }
 
 function fetchTags($qid){
   $tags = array();
-  $conn = connectSql();
   $sql = "SELECT tag from q_tag where qid = '".$qid."'";
-  $result = $conn->query($sql);
+  $result = $GLOBALS['conn']->query($sql);
     if ($result->num_rows > 0) {
       // output data of each row
       while($row = $result->fetch_assoc()) {
@@ -112,13 +102,8 @@ function attachTags($tags,$temp){
 function fetchComments($qid,$temp){
 
   $myarray = array();
-
-  $conn = connectSql();
-
   $sql = "SELECT cid,user from comments where qid = '".$qid."'";
-
-  $result = $conn->query($sql);
-
+  $result = $GLOBALS['conn']->query($sql);
     if ($result->num_rows > 0) {
       // output data of each row
       while($row = $result->fetch_assoc()) {
@@ -133,10 +118,10 @@ function fetchComments($qid,$temp){
     foreach($myarray as $comment => $user) {
           $fileEx = explode('.', $comment);
           $fileExt = strtolower(end($fileEx));
-          if(strcmp($fileExt,'mp3')==0){
+          if(in_array($fileExt, $GLOBALS['allowedAudio'])){
                   $temp = makeAudio($comment,$user,$temp,"Comment");
           }
-          elseif (strcmp($fileExt,'jpg')==0) {
+          elseif (in_array($fileExt, $GLOBALS['allowedImage'])) {
                   $temp = makeImage($comment,$user,$temp,"Comment");
                   $textName = checkImgText($comment,2);//2 for comments
                   if($textName!=0){
@@ -147,7 +132,6 @@ function fetchComments($qid,$temp){
                   $temp = makeText($comment,$user,$temp,"Comment");
           }
     }
-    $conn->close();
     return $temp;
 }
 
@@ -164,29 +148,20 @@ function findname($id,$who){
   elseif ($who==2) {
     $sql = "SELECT name from expert where eid = '".$id."'";
   }
-  $conn = connectSql();
-
-  $result = $conn->query($sql);
-
+  $result = $GLOBALS['conn']->query($sql);
   if ($result->num_rows > 0) {
       // output data of each row
       while($row = $result->fetch_assoc()) {
           $name= $row["name"];
       }
   }
-  $conn->close();
-
   return $name;
 }
 
 function fetchSolution($fileName,$temp){
-  
-  $conn = connectSql();
-  
+
   $sqlSolution = "SELECT sid,eid FROM qs WHERE qid='".$fileName."'";
-
-  $result = $conn->query($sqlSolution);
-
+  $result = $GLOBALS['conn']->query($sqlSolution);
   if ($result->num_rows > 0) {
       // output data of each row
       while($row = $result->fetch_assoc()) {
@@ -198,14 +173,14 @@ function fetchSolution($fileName,$temp){
   $fileEx = explode('.', $solution);
   $fileExt = strtolower(end($fileEx));
 
-  if(strcmp($fileExt,'mp3')==0){
+  if(in_array($fileExt, $GLOBALS['allowedAudio'])){
     $temp = makeAudio($solution,$expert,$temp,"Solution");
     // $textName = checkImgText($solution,0);//0 for solution
     // if($textName!=0){
     //   $temp = makeText($textName,"^^^^^",$temp,"Solution");
     // }
   }
-  elseif (strcmp($fileExt,'jpg')==0) {
+  elseif (in_array($fileExt, $GLOBALS['allowedImage'])) {
     $temp = makeImage($solution,$expert,$temp,"Solution");
     $textName = checkImgText($solution,0);//0 for solution
     if($textName!=0){
@@ -220,8 +195,6 @@ function fetchSolution($fileName,$temp){
 
 function checkImgText($fileName,$check){
   
-  $conn = connectSql();
-
   if($check==1){ //check in question (with img and text)
     $sql = "SELECT text_id FROM qimgtext WHERE img_id='".$fileName."'";
   }
@@ -231,9 +204,7 @@ function checkImgText($fileName,$check){
   elseif($check==2) { //check in comments (with img and text)
     $sql = "SELECT text_id FROM cimgtext WHERE img_id='".$fileName."'";
   }
-
-  $result = $conn->query($sql);
-
+  $result = $GLOBALS['conn']->query($sql);
   if ($result->num_rows > 0) {
       // output data of each row
       while($row = $result->fetch_assoc()) {
@@ -246,36 +217,51 @@ function checkImgText($fileName,$check){
   }
 }
 
-function connectSql(){
-  $servername = "localhost";
-  $username = "root";
-  $password = "";
-  $dbname = "ks";
-  // Create connection
-  $conn = new mysqli($servername, $username, $password, $dbname);
-  // Check connection
-  if ($conn->connect_error) {
-      die("Connection failed: " . $conn->connect_error);
-  }
-  return $conn;
-}
-
-
+//Image display for Question,Solution,Comments
 function makeAudio($fileName,$userId,$temp,$dir){
-  $temp = $temp."
-        <div class=\"media text-muted pt-3\">
-          <img data-src=\"holder.js/32x32?theme=thumb&bg=e83e8c&fg=e83e8c&size=1\" alt=\"\" class=\"mr-2 rounded\">
-          <p class=\"media-body pb-3 mb-0 small lh-125 border-bottom border-gray\">
-            <strong class=\"d-block text-gray-dark\">@".$userId."</strong>
-            <audio controls>
-              <source src='".$dir."/".$fileName."' type='audio/mpeg'>
-            </audio>
-          </p>
-        </div> ";
-  return $temp;
-
+  if(strcmp($dir, "Question")==0){
+      $temp = $temp."
+          <div class=\"media text-muted pt-3\">
+            <img data-src=\"holder.js/32x32?theme=thumb&bg=e83e8c&fg=e83e8c&size=1\" alt=\"\" class=\"mr-2 rounded\">
+            <p class=\"media-body pb-3 mb-0 small lh-125 border-bottom border-gray\">
+              <h2>@".$userId."</h2>
+              <audio controls>
+                <source src='".$dir."/".$fileName."' type='audio/mpeg'>
+              </audio>
+            </p>
+          </div> ";
+      return $temp;
+  }
+  elseif (strcmp($dir, "Solution")==0) {
+    $temp = $temp."
+          <div class=\"media text-muted pt-3\">
+            <img data-src=\"holder.js/32x32?theme=thumb&bg=e83e8c&fg=e83e8c&size=1\" alt=\"\" class=\"mr-2 rounded\">
+            <p class=\"media-body pb-3 mb-0 small lh-125 border-bottom border-gray\">
+              <strong class=\"d-block text-gray-dark\">@".$userId."</strong>
+              <audio controls>
+                <source src='".$dir."/".$fileName."' type='audio/mpeg'>
+              </audio>
+            </p>
+          </div> ";
+      return $temp;
+  }
+  elseif (strcmp($dir, "Comment")==0) {
+    $temp = $temp."
+          <div class=\"media text-muted pt-3\">
+            <img data-src=\"holder.js/32x32?theme=thumb&bg=e83e8c&fg=e83e8c&size=1\" alt=\"\" class=\"mr-2 rounded\">
+            <p class=\"media-body pb-3 mb-0 small lh-125 border-bottom border-gray\">
+              <strong class=\"d-block text-gray-dark\">@".$userId."</strong>
+              <audio controls>
+                <source src='".$dir."/".$fileName."' type='audio/mpeg'>
+              </audio>
+            </p>
+          </div> ";
+      return $temp;
+  }
 }
+//Image display for Question,Solution,Comments
 function makeImage($fileName,$userId,$temp,$dir){
+  if(strcmp($dir, "Question")==0){
     $temp = $temp."
         <div class=\"media text-muted pt-3\">
           <img data-src=\"holder.js/32x32?theme=thumb&bg=e83e8c&fg=e83e8c&size=1\" alt=\"\" class=\"mr-2 rounded\">
@@ -284,9 +270,34 @@ function makeImage($fileName,$userId,$temp,$dir){
             <img src=\"".$dir."/".$fileName."\" class=\"thumbnail\" alt='Smiley face' height=\"100px\" width=\"100px\">
           </p>
         </div> ";
-  return $temp;
+    return $temp;
+  }
+  elseif (strcmp($dir, "Solution")==0) {
+    $temp = $temp."
+        <div class=\"media text-muted pt-3\">
+          <img data-src=\"holder.js/32x32?theme=thumb&bg=e83e8c&fg=e83e8c&size=1\" alt=\"\" class=\"mr-2 rounded\">
+          <p class=\"media-body pb-3 mb-0 small lh-125 border-bottom border-gray\">
+            <strong class=\"d-block text-gray-dark\">@".$userId."</strong>
+            <img src=\"".$dir."/".$fileName."\" class=\"thumbnail\" alt='Smiley face' height=\"100px\" width=\"100px\">
+          </p>
+        </div> ";
+    return $temp;
+  }
+  elseif (strcmp($dir, "Comment")==0) {
+    $temp = $temp."
+        <div class=\"media text-muted pt-3\">
+          <img data-src=\"holder.js/32x32?theme=thumb&bg=e83e8c&fg=e83e8c&size=1\" alt=\"\" class=\"mr-2 rounded\">
+          <p class=\"media-body pb-3 mb-0 small lh-125 border-bottom border-gray\">
+            <strong class=\"d-block text-gray-dark\">@".$userId."</strong>
+            <img src=\"".$dir."/".$fileName."\" class=\"thumbnail\" alt='Smiley face' height=\"100px\" width=\"100px\">
+          </p>
+        </div> ";
+    return $temp;
+  }
 }
+//Text display for Question,Solution,Comments
 function makeText($fileName,$userId,$temp,$dir){
+  if(strcmp($dir, "Question")==0){
     $myfile = fopen($dir."/".$fileName,"r") or die("Unable to open file!");
     $temp = $temp."
         <div class=\"media text-muted pt-3\">
@@ -298,7 +309,35 @@ function makeText($fileName,$userId,$temp,$dir){
         </div> ";
     fclose($myfile);
   return $temp;
+  }
+  elseif (strcmp($dir, "Solution")==0) {
+    $myfile = fopen($dir."/".$fileName,"r") or die("Unable to open file!");
+    $temp = $temp."
+        <div class=\"media text-muted pt-3\">
+          <img data-src=\"holder.js/32x32?theme=thumb&bg=e83e8c&fg=e83e8c&size=1\" alt=\"\" class=\"mr-2 rounded\">
+          <p class=\"media-body pb-3 mb-0 small lh-125 border-bottom border-gray\">
+            <strong class=\"d-block text-gray-dark\">@".$userId."</strong>".
+              fread($myfile,filesize($dir."/".$fileName))."
+          </p>
+        </div> ";
+    fclose($myfile);
+  return $temp;
+  }
+  elseif (strcmp($dir, "Comment")==0) {
+    $myfile = fopen($dir."/".$fileName,"r") or die("Unable to open file!");
+    $temp = $temp."
+        <div class=\"media text-muted pt-3\">
+          <img data-src=\"holder.js/32x32?theme=thumb&bg=e83e8c&fg=e83e8c&size=1\" alt=\"\" class=\"mr-2 rounded\">
+          <p class=\"media-body pb-3 mb-0 small lh-125 border-bottom border-gray\">
+            <strong class=\"d-block text-gray-dark\">@".$userId."</strong>".
+              fread($myfile,filesize($dir."/".$fileName))."
+          </p>
+        </div> ";
+    fclose($myfile);
+    return $temp;
+  }
 }
+$conn->close();
 ?>
 
 <!doctype html>
@@ -310,7 +349,6 @@ function makeText($fileName,$userId,$temp,$dir){
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
-
     <title>KS</title>
     <link href="imp.css" rel="stylesheet">
     <link href="css/style.css" rel="stylesheet">
@@ -403,7 +441,7 @@ function makeText($fileName,$userId,$temp,$dir){
       </div>
 
       <!--COMMENTS BEAUTIFY IT LIKE IN testOption.html-->
-      <form action = "comments.php" enctype="multipart/form-data" method="POST">
+      <form id="comment" action = "comments.php" enctype="multipart/form-data" method="POST">
           <div class="form-group">
               <input type="text" id="audioComment" name="qid">
               <label for="audio_file">Upload audio here</label>
