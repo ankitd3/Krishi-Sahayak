@@ -65,6 +65,9 @@ function fetchQuestion($sql,$solved){
           if($solved!=0){
             $temp = fetchSolution($fileName,$temp);
           }
+          else{
+            $temp = $temp."<br><a href='Solution.php?qid=".$fileName."'>SOLVE ME</a>";
+          }
           //Attach comments(if any)
           $temp = fetchComments($fileName,$temp);//check if there are any comments for the qid, returns an array with the filenames of comments to be included.
       }
