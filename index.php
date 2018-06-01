@@ -299,43 +299,82 @@ function makeImage($fileName,$userId,$temp,$dir){
 }
 //Text display for Question,Solution,Comments
 function makeText($fileName,$userId,$temp,$dir){
+
+  $myfile = fopen($dir."/".$fileName,"r") or die("Unable to open file!");
+  $text = fread($myfile,filesize($dir."/".$fileName));
+  fclose($myfile);
+
+  $original = explode("n6a6m6i6t6a", $text);
+
+  $originalId = $fileName.'original';
+  $translatedId = $fileName.'translated';
+
   if(strcmp($dir, "Question")==0){
-    $myfile = fopen($dir."/".$fileName,"r") or die("Unable to open file!");
+
     $temp = $temp."
-        <div class=\"media text-muted pt-3\">
+        <div id=\"".$originalId."\" class=\"media text-muted pt-3\">
           <img data-src=\"holder.js/32x32?theme=thumb&bg=e83e8c&fg=e83e8c&size=1\" alt=\"\" class=\"mr-2 rounded\">
           <p class=\"media-body pb-3 mb-0 small lh-125 border-bottom border-gray\">
             <strong class=\"d-block text-gray-dark\">@".$userId."</strong>".
-              fread($myfile,filesize($dir."/".$fileName))."
+              $original[0]."
           </p>
         </div> ";
-    fclose($myfile);
+
+    $temp = $temp."
+        <div id=\"".$translatedId."\" style=\"display: none;\" class=\"media text-muted pt-3\">
+          <img data-src=\"holder.js/32x32?theme=thumb&bg=e83e8c&fg=e83e8c&size=1\" alt=\"\" class=\"mr-2 rounded\">
+          <p class=\"media-body pb-3 mb-0 small lh-125 border-bottom border-gray\">
+            <strong class=\"d-block text-gray-dark\">@".$userId."</strong>".
+              $original[1]."
+          </p>
+        </div> ";
+
+    $temp = $temp."<button onclick=\"toggle('".$originalId."','".$translatedId."')\">Translate</button>";
+
   return $temp;
   }
   elseif (strcmp($dir, "Solution")==0) {
-    $myfile = fopen($dir."/".$fileName,"r") or die("Unable to open file!");
     $temp = $temp."
-        <div class=\"media text-muted pt-3\">
+        <div id=\"".$originalId."\" class=\"media text-muted pt-3\">
           <img data-src=\"holder.js/32x32?theme=thumb&bg=e83e8c&fg=e83e8c&size=1\" alt=\"\" class=\"mr-2 rounded\">
           <p class=\"media-body pb-3 mb-0 small lh-125 border-bottom border-gray\">
             <strong class=\"d-block text-gray-dark\">@".$userId."</strong>".
-              fread($myfile,filesize($dir."/".$fileName))."
+              $original[0]."
           </p>
         </div> ";
-    fclose($myfile);
+
+    $temp = $temp."
+        <div id=\"".$translatedId."\" style=\"display: none;\" class=\"media text-muted pt-3\">
+          <img data-src=\"holder.js/32x32?theme=thumb&bg=e83e8c&fg=e83e8c&size=1\" alt=\"\" class=\"mr-2 rounded\">
+          <p class=\"media-body pb-3 mb-0 small lh-125 border-bottom border-gray\">
+            <strong class=\"d-block text-gray-dark\">@".$userId."</strong>".
+              $original[1]."
+          </p>
+        </div> ";
+
+    $temp = $temp."<button onclick=\"toggle('".$originalId."','".$translatedId."')\">Translate</button>";
   return $temp;
   }
   elseif (strcmp($dir, "Comment")==0) {
-    $myfile = fopen($dir."/".$fileName,"r") or die("Unable to open file!");
     $temp = $temp."
-        <div class=\"media text-muted pt-3\">
+        <div id=\"".$originalId."\" class=\"media text-muted pt-3\">
           <img data-src=\"holder.js/32x32?theme=thumb&bg=e83e8c&fg=e83e8c&size=1\" alt=\"\" class=\"mr-2 rounded\">
           <p class=\"media-body pb-3 mb-0 small lh-125 border-bottom border-gray\">
             <strong class=\"d-block text-gray-dark\">@".$userId."</strong>".
-              fread($myfile,filesize($dir."/".$fileName))."
+              $original[0]."
           </p>
         </div> ";
-    fclose($myfile);
+
+    $temp = $temp."
+        <div id=\"".$translatedId."\" style=\"display: none;\" class=\"media text-muted pt-3\">
+          <img data-src=\"holder.js/32x32?theme=thumb&bg=e83e8c&fg=e83e8c&size=1\" alt=\"\" class=\"mr-2 rounded\">
+          <p class=\"media-body pb-3 mb-0 small lh-125 border-bottom border-gray\">
+            <strong class=\"d-block text-gray-dark\">@".$userId."</strong>".
+              $original[1]."
+          </p>
+        </div> ";
+
+    $temp = $temp."<button onclick=\"toggle('".$originalId."','".$translatedId."')\">Translate</button>";
     return $temp;
   }
 }
@@ -483,6 +522,20 @@ $conn->close();
           document.getElementById('imgComment').value=qid;
           document.getElementById('textComment').value=qid;          
         }
+
+        function toggle(id1,id2) {
+
+          console.log(id2);
+
+           var original = document.getElementById(id1); 
+           var translated = document.getElementById(id2);
+
+           original.style.display = (
+               original.style.display == "none" ? "block" : "none"); 
+           translated.style.display = (
+               translated.style.display == "none" ? "block" : "none"); 
+        }
+
     </script>
 
     <script type="text/javascript">
