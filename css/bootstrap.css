@@ -21,3 +21,7 @@ li:hover{
 a.nav-link:hover{
     color: black;
 }
+
+.bs-example{
+    margin: 20px;
+}
