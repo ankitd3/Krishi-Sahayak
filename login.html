@@ -1,86 +1,124 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <title>Krishi Sahayak-Login/Register</title>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css">
-  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
-  <link rel = "stylesheet" href = "css/hello.css">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>Krishi Sahayk-login page</title>
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+        crossorigin="anonymous">
+
+    <!--custom css-->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,900" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp"
+        crossorigin="anonymous">
+
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <link rel="stylesheet" href="css/hello.css">
 </head>
+
 <body>
-    <br>
-    <div class = "container text-center">
+
+    <!--navigation menu-->
+    <nav id="mainmenu" class="navbar navbar-expand-md">
+        <a href="#" style="color: #FAFEF9" class="navbar-brand"> Krishi Sahayak </a>
+
+        <!--button for collapse toggler-->
+        <button type="button" data-target="#menu" data-toggle="collapse" aria-controls="menu" aria-expanded="false" aria-label="toggle navigation"
+            class="navbar-toggler navbar-dark">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="menu">
+
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="#">Ask question</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Frequently asked</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">My questions</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container text-center">
         <h1>Krishi Sahayak</h1>
     </div>
     <hr>
-<br>
+    <!-- tab starts here-->
+    <div class="container">
 
-<div class="container">
-  <br>
-  <!-- Nav tabs -->
-  <ul class="nav nav-tabs" role="tablist">
-    <li class="nav-item">
-      <a class="nav-link active" data-toggle="tab" href="#home">Login</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" data-toggle="tab" href="#menu1">Register</a>
-    </li>
-  </ul>
+        <!--defining tab headings-->
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Login</a>
+            </li>
+            <li class="nav-item">
+                <a style="color:#2b5e40" class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile"
+                    aria-selected="false">Register</a>
+            </li>
+        </ul>
+        <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                <br>
+                <form action="">
 
-  <!-- Tab panes -->
-  <div class="tab-content">
-    
-    <div id="home" class="container tab-pane active"><br>
-        <h3>Login</h3>
-        <form action = "">
-            <div class="input-container">
-                <i class="fa fa-user icon"></i>
-                <input class="input-field" type="number" placeholder="Phone Number" name="phno" id = "phno">
-            </div>
+                    <div class="input-container">
+                        <i style="background-color:#2b5e40" class="fa fa-user icon"></i>
+                        <input class="input-field" type="number" placeholder="Phone Number" name="phno" id="phno">
+                    </div>
 
-            <div class="input-container">
-                <i class="fa fa-key icon"></i>
-                <input class="input-field" type="password" placeholder="Password" name="psw">
+                    <div class="input-container">
+                        <i style="background-color:#2b5e40" class="fa fa-key icon"></i>
+                        <input class="input-field" type="password" placeholder="Password" name="psw">
+                    </div>
+                    <center>
+                        <div class="col-md-3">
+                            <button style="background-color:#2b5e40; color:#FAFEF9" type="submit" class="btn">Login</button>
+                        </div>
+                    </center>
+                </form>
             </div>
-            <center>
-            <div class = "col-md-3">
-            <button type="submit" class="btn">Login</button>
+            <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                <h3>Register</h3>
+                <form action="register.php">
+                    <div class="input-container">
+                        <i style="background-color:#2b5e40" class="fa fa-user icon"></i>
+                        <input class="input-field" type="number" placeholder="Phone Number" name="regphno" id="regphno">
+                    </div>
+
+                    <div class="input-container">
+                        <i style="background-color:#2b5e40" class="fa fa-key icon"></i>
+                        <input class="input-field" type="password" placeholder="Password" name="regpsw1">
+                    </div>
+                    <div class="input-container">
+                        <i style="background-color:#2b5e40" class="fa fa-key icon"></i>
+                        <input class="input-field" type="password" placeholder="Re-enter password" name="regpsw2">
+                    </div>
+                    <center>
+                        <div class="col-md-3">
+                            <button type="submit" style="background-color:#2b5e40;color:#FAFEF9" name="submit_farmer" class="btn">Register</button>
+                        </div>
+                    </center>
+                </form>
+
             </div>
-            </center>
-        </form>
+        </div>
     </div>
 
-
-    <div id="menu1" class="container tab-pane fade"><br>
-      <h3>Register</h3>
-      <form action = "register.php">
-            <div class="input-container">
-                    <i class="fa fa-user icon"></i>
-                    <input class="input-field" type="number" placeholder="Phone Number" name="regphno" id = "regphno">
-            </div>
-            
-            <div class="input-container">
-                <i class="fa fa-key icon"></i>
-                <input class="input-field" type="password" placeholder="Password" name="regpsw1">
-            </div>
-            <div class="input-container">
-                <i class="fa fa-key icon"></i>
-                <input class="input-field" type="password" placeholder="Re-enter password" name="regpsw2">
-            </div>
-            <center>
-                <div class = "col-md-3">
-                    <button type="submit" name="submit_farmer" class="btn">Register</button>
-                </div>
-            </center>
-        </form>
-    </div>
-</div>
-</div>
-<!-- including scripts-->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
-
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
 </body>
+
 </html>

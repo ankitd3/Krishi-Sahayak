@@ -1,22 +1,19 @@
 * {box-sizing: border-box;}
 
-/* Style the input container */
 .input-container {
   display: flex;
   width: 100%;
   margin-bottom: 15px;
 }
 
-/* Style the form icons */
 .icon {
   padding: 10px;
-  background: dodgerblue;
+  background-color: #2b5e40;
   color: white;
   min-width: 50px;
   text-align: center;
 }
 
-/* Style the input fields */
 .input-field {
   width: 100%;
   padding: 10px;
@@ -24,13 +21,12 @@
 }
 
 .input-field:focus {
-  border: 2px solid dodgerblue;
+  border: 2px solid #2b5e40;
 }
 
-/* Set a style for the submit button */
 .btn {
-  background-color: dodgerblue;
-  color: white;
+  background-color: #2b5e40;
+  color: #fafef9;
   padding: 15px 20px;
   border: none;
   cursor: pointer;
