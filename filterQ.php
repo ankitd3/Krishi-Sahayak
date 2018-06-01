@@ -12,12 +12,13 @@ $conn = new mysqli($servername, $username, $password, $dbname);
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
-//$sqlSolved = "SELECT qid,sid FROM qs WHERE qid in (select qid from q where q\.solved = 1)";
-$sqlSolved = "SELECT * FROM q WHERE (solved = 1) AND qid IN (SELECT qid FROM q_tag WHERE tag = '".$tag."')";
-$sqlUnsolved = "SELECT * FROM q WHERE (solved = 0) AND qid IN (SELECT qid FROM q_tag WHERE tag = '".$tag."')";
 
 $allowedAudio = array('mp3','ogg'); //accepted file types
 $allowedImage = array('jpeg','jpg','png'); //accepted file types
+
+//$sqlSolved = "SELECT qid,sid FROM qs WHERE qid in (select qid from q where q\.solved = 1)";
+$sqlSolved = "SELECT * FROM q WHERE (solved = 1) AND qid IN (SELECT qid FROM q_tag WHERE tag = '".$tag."')";
+$sqlUnsolved = "SELECT * FROM q WHERE (solved = 0) AND qid IN (SELECT qid FROM q_tag WHERE tag = '".$tag."')";
 
 $solved = fetchQuestion($sqlSolved,1);//1-Solved
 $unsolved = fetchQuestion($sqlUnsolved,0);//0-Solved
@@ -62,10 +63,12 @@ function fetchQuestion($sql,$solved){
             $temp = makeText($fileName,$farmer_name,$temp,"Question");
           }
 
-
           //attach solution(if any)
           if($solved!=0){
             $temp = fetchSolution($fileName,$temp);
+          }
+          else{
+            $temp = $temp."<br><a href='Solution.php?qid=".$fileName."'>SOLVE ME</a>";
           }
           //Attach comments(if any)
           $temp = fetchComments($fileName,$temp);//check if there are any comments for the qid, returns an array with the filenames of comments to be included.
@@ -299,43 +302,82 @@ function makeImage($fileName,$userId,$temp,$dir){
 }
 //Text display for Question,Solution,Comments
 function makeText($fileName,$userId,$temp,$dir){
+
+  $myfile = fopen($dir."/".$fileName,"r") or die("Unable to open file!");
+  $text = fread($myfile,filesize($dir."/".$fileName));
+  fclose($myfile);
+
+  $original = explode("n6a6m6i6t6a", $text);
+
+  $originalId = $fileName.'original';
+  $translatedId = $fileName.'translated';
+
   if(strcmp($dir, "Question")==0){
-    $myfile = fopen($dir."/".$fileName,"r") or die("Unable to open file!");
+
     $temp = $temp."
-        <div class=\"media text-muted pt-3\">
+        <div id=\"".$originalId."\" class=\"media text-muted pt-3\">
           <img data-src=\"holder.js/32x32?theme=thumb&bg=e83e8c&fg=e83e8c&size=1\" alt=\"\" class=\"mr-2 rounded\">
           <p class=\"media-body pb-3 mb-0 small lh-125 border-bottom border-gray\">
             <strong class=\"d-block text-gray-dark\">@".$userId."</strong>".
-              fread($myfile,filesize($dir."/".$fileName))."
+              $original[0]."
           </p>
         </div> ";
-    fclose($myfile);
+
+    $temp = $temp."
+        <div id=\"".$translatedId."\" style=\"display: none;\" class=\"media text-muted pt-3\">
+          <img data-src=\"holder.js/32x32?theme=thumb&bg=e83e8c&fg=e83e8c&size=1\" alt=\"\" class=\"mr-2 rounded\">
+          <p class=\"media-body pb-3 mb-0 small lh-125 border-bottom border-gray\">
+            <strong class=\"d-block text-gray-dark\">@".$userId."</strong>".
+              $original[1]."
+          </p>
+        </div> ";
+
+    $temp = $temp."<button onclick=\"toggle('".$originalId."','".$translatedId."')\">Translate</button>";
+
   return $temp;
   }
   elseif (strcmp($dir, "Solution")==0) {
-    $myfile = fopen($dir."/".$fileName,"r") or die("Unable to open file!");
     $temp = $temp."
-        <div class=\"media text-muted pt-3\">
+        <div id=\"".$originalId."\" class=\"media text-muted pt-3\">
           <img data-src=\"holder.js/32x32?theme=thumb&bg=e83e8c&fg=e83e8c&size=1\" alt=\"\" class=\"mr-2 rounded\">
           <p class=\"media-body pb-3 mb-0 small lh-125 border-bottom border-gray\">
             <strong class=\"d-block text-gray-dark\">@".$userId."</strong>".
-              fread($myfile,filesize($dir."/".$fileName))."
+              $original[0]."
           </p>
         </div> ";
-    fclose($myfile);
+
+    $temp = $temp."
+        <div id=\"".$translatedId."\" style=\"display: none;\" class=\"media text-muted pt-3\">
+          <img data-src=\"holder.js/32x32?theme=thumb&bg=e83e8c&fg=e83e8c&size=1\" alt=\"\" class=\"mr-2 rounded\">
+          <p class=\"media-body pb-3 mb-0 small lh-125 border-bottom border-gray\">
+            <strong class=\"d-block text-gray-dark\">@".$userId."</strong>".
+              $original[1]."
+          </p>
+        </div> ";
+
+    $temp = $temp."<button onclick=\"toggle('".$originalId."','".$translatedId."')\">Translate</button>";
   return $temp;
   }
   elseif (strcmp($dir, "Comment")==0) {
-    $myfile = fopen($dir."/".$fileName,"r") or die("Unable to open file!");
     $temp = $temp."
-        <div class=\"media text-muted pt-3\">
+        <div id=\"".$originalId."\" class=\"media text-muted pt-3\">
           <img data-src=\"holder.js/32x32?theme=thumb&bg=e83e8c&fg=e83e8c&size=1\" alt=\"\" class=\"mr-2 rounded\">
           <p class=\"media-body pb-3 mb-0 small lh-125 border-bottom border-gray\">
             <strong class=\"d-block text-gray-dark\">@".$userId."</strong>".
-              fread($myfile,filesize($dir."/".$fileName))."
+              $original[0]."
           </p>
         </div> ";
-    fclose($myfile);
+
+    $temp = $temp."
+        <div id=\"".$translatedId."\" style=\"display: none;\" class=\"media text-muted pt-3\">
+          <img data-src=\"holder.js/32x32?theme=thumb&bg=e83e8c&fg=e83e8c&size=1\" alt=\"\" class=\"mr-2 rounded\">
+          <p class=\"media-body pb-3 mb-0 small lh-125 border-bottom border-gray\">
+            <strong class=\"d-block text-gray-dark\">@".$userId."</strong>".
+              $original[1]."
+          </p>
+        </div> ";
+
+    $temp = $temp."<button onclick=\"toggle('".$originalId."','".$translatedId."')\">Translate</button>";
     return $temp;
   }
 }
@@ -483,6 +525,20 @@ $conn->close();
           document.getElementById('imgComment').value=qid;
           document.getElementById('textComment').value=qid;          
         }
+
+        function toggle(id1,id2) {
+
+          console.log(id2);
+
+           var original = document.getElementById(id1); 
+           var translated = document.getElementById(id2);
+
+           original.style.display = (
+               original.style.display == "none" ? "block" : "none"); 
+           translated.style.display = (
+               translated.style.display == "none" ? "block" : "none"); 
+        }
+
     </script>
 
     <script type="text/javascript">

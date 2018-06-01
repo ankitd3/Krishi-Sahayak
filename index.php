@@ -36,8 +36,6 @@ function fetchQuestion($sql,$solved){
           //Enable commenting by clicking on it and go to comment section
           $temp = $temp."<a href='#comment' <p onclick=\"addQid('".$fileName."')\">Click to add qid in comments form automatically</p></a>";
           //array of tags returned for the question
-          $tags = fetchTags($fileName);
-          $temp = attachTags($tags,$temp);
 
           if(in_array($fileExt, $GLOBALS['allowedAudio'])){
 
@@ -52,11 +50,21 @@ function fetchQuestion($sql,$solved){
             $temp = makeImage($fileName,$farmer_name,$temp,"Question");
             $textName = checkImgText($fileName,1);//1 for question
             if($textName!=0){
+
+              $tags = fetchTags($fileName);
+          
+              $temp = attachTags($tags,$temp);
+
               $temp = makeText($textName,"^^^^",$temp,"Question");
             }       
           }
 
           elseif (strcmp($fileExt,'txt')==0) {
+
+            $tags = fetchTags($fileName);
+          
+            $temp = attachTags($tags,$temp);
+
             $temp = makeText($fileName,$farmer_name,$temp,"Question");
           }
 
