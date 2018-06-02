@@ -1,4 +1,10 @@
 <?php
+
+session_start();
+
+$fName = $_SESSION['name'];
+$fid = $_SESSION['id'];
+
 require __DIR__ . '/vendor/autoload.php';
 	# Imports the Google Cloud client library
 use Google\Cloud\Translate\TranslateClient;
@@ -89,6 +95,7 @@ if(isset($_POST['submit_text'])||isset($_POST['submit_img'])||isset($_POST['subm
 		$wordsTags = autoTagging($fileNewName);
 		updateTag($wordsTags,$fileName);
 	}
+	//header('Location: index.php');
 }
 function translateLang($file,$input){
 	$translate = new TranslateClient([
@@ -158,7 +165,7 @@ function insertImgText($text,$img){
 }
 function insertdb($question){
 	
-	$sql = "INSERT INTO q (qid) VALUES ('".$question."')";
+	$sql = "INSERT INTO q (qid,fid) VALUES ('".$question."','".$GLOBALS['fid']."')";
 	if ($GLOBALS['conn']->query($sql) === TRUE) {
 	    echo "New record created successfully";
 	} else {
