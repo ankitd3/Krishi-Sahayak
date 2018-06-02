@@ -17,14 +17,14 @@ if(isset($_POST['submit_form'])){
 	$name = $_POST["name"];
 	$phone = $_POST["regphno"];
 	$type = $_POST["optradio"];
-	$pass = $_POST["regpsw1"];
+	$pass = md5($_POST["regpsw1"]);
 
 	if ($type=='1') {
 		echo "FAMR";
 		$sql = "INSERT INTO farmer (phno,name,password) VALUES ('".$phone."','".$name."','".$pass."')";
 
 		if ($conn->query($sql) === TRUE) {
-		    echo "New record created successfully";
+		    header('Location: ../login.html');
 		} else {
 		    echo "Error: " . $sql . "<br>" . $GLOBALS['conn']->error;
 		}
@@ -38,7 +38,7 @@ if(isset($_POST['submit_form'])){
 			$sql = "INSERT INTO expert (phno,name,password) VALUES ('".$phone."','".$name."','".$pass."')";
 
 			if ($conn->query($sql) === TRUE) {
-			    echo "New record created successfully";
+			    header('Location: ../login.html');
 			} else {
 			    echo "Error: " . $sql . "<br>" . $GLOBALS['conn']->error;
 			}
@@ -46,5 +46,4 @@ if(isset($_POST['submit_form'])){
 	}
 
 }
-
 ?>

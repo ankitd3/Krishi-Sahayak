@@ -1,5 +1,10 @@
 <?php
 
+session_start();
+
+$id = $_SESSION['id'];
+//$id = "25";
+
 require __DIR__ . '/vendor/autoload.php';
 	# Imports the Google Cloud client library
 use Google\Cloud\Translate\TranslateClient;
@@ -147,7 +152,7 @@ function insertImgText($text,$img){
 
 function insertdb($solution,$question){
 	
-	$sql = "INSERT INTO qs (qid,sid) VALUES ('".$question."','".$solution."')";
+	$sql = "INSERT INTO qs (qid,sid,eid) VALUES ('".$question."','".$solution."','".$GLOBALS['id']."')";
 
 	if ($GLOBALS['conn']->query($sql) === TRUE) {
 	    echo "New record created successfully";
