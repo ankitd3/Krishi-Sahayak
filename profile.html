@@ -51,16 +51,66 @@
 
     <div class="container">
         <h3> Farmer Profile </h3>
+        <hr><hr>
+
+        <form action="" method="POST">
+            <label for="q1">
+                <h5>Crop sown? </h5>
+            </label>
+            <div class="form-check-inline">
+                <label class="form-check-label">
+                    <input type="radio" class="form-check-input" name="q1">Yes
+                </label>
+            </div>
+            <div class="form-check-inline">
+                <label class="form-check-label">
+                    <input type="radio" class="form-check-input" name="q1">No
+                </label>
+            </div>
+            <button class="btn btn-md" type="submit"> Add/Edit </button>
+        </form>
+        <hr>
+        <form>
+            <label for="q2">
+                <h5>Polyhouse? </h5>
+            </label>
+            <div class="form-check-inline">
+                <label class="form-check-label">
+                    <input type="radio" class="form-check-input" name="q2">Yes
+                </label>
+            </div>
+            <div class="form-check-inline">
+                <label class="form-check-label">
+                    <input type="radio" class="form-check-input" name="q2">No
+                </label>
+            </div>
+            <button class="btn btn-md" type="submit"> Add/Edit </button>
+        </form>
         <hr>
         <form action="" method="POST">
             <div class=" form-group ">
                 <label for="crop">
-                    <h5>Name of crops: </h5>
+                    <h5>Name of crops:(enter "none" if not sown) </h5>
                 </label>
                 <input type="textarea" class="form-control" id="crop" placeholder="rice,wheat">
             </div>
             <button class="btn btn-lg" type="submit"> Add/Edit </button>
         </form>
+        <hr>
+        <form action="" method="POST">
+            <div class=" form-group ">
+                <label for="irrigation">
+                    <h5>irrigation type: </h5>
+                </label>
+                <select class="custom-select custom-select-md mb-3">
+                    <option selected disabled>Choose type</option>
+                    <option value="1">Sprinkler</option>
+                    <option value="2">Drip irrigation</option>
+                </select>
+            </div>
+            <button class="btn btn-lg" type="submit"> Add/Edit </button>
+        </form>
+
         <hr>
         <form action="" method="POST">
             <div class=" form-group ">
@@ -91,12 +141,6 @@
             </div>
             <button class="btn btn-lg" type="submit"> Add/Edit </button>
         </form>
-
-
-
-
-
-
     </div>
     <script type="text/javascript ">
         function googleTranslateElementInit() {
