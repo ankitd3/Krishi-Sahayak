@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: May 31, 2018 at 01:51 PM
+-- Generation Time: Jun 02, 2018 at 11:51 PM
 -- Server version: 10.1.30-MariaDB
 -- PHP Version: 7.2.2
 
@@ -42,7 +42,7 @@ CREATE TABLE `cimgtext` (
 CREATE TABLE `comments` (
   `qid` varchar(30) NOT NULL,
   `cid` varchar(30) NOT NULL,
-  `user` int(11) NOT NULL DEFAULT '99'
+  `user` varchar(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -53,15 +53,18 @@ CREATE TABLE `comments` (
 
 CREATE TABLE `expert` (
   `eid` int(11) NOT NULL,
-  `name` varchar(30) NOT NULL
+  `name` varchar(30) NOT NULL,
+  `password` varchar(64) NOT NULL,
+  `phno` bigint(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `expert`
 --
 
-INSERT INTO `expert` (`eid`, `name`) VALUES
-(21, 'Expert1');
+INSERT INTO `expert` (`eid`, `name`, `password`, `phno`) VALUES
+(25, 'Namita', 'a3f390d88e4c41f2747bfa2f1b5f87db', 68),
+(501, 'qw', '76d80224611fc919a5d54f0ff9fba446', 123);
 
 -- --------------------------------------------------------
 
@@ -73,7 +76,7 @@ CREATE TABLE `farmer` (
   `fid` int(11) NOT NULL,
   `phno` bigint(20) NOT NULL,
   `name` text NOT NULL,
-  `password` varchar(30) NOT NULL
+  `password` varchar(64) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -81,7 +84,8 @@ CREATE TABLE `farmer` (
 --
 
 INSERT INTO `farmer` (`fid`, `phno`, `name`, `password`) VALUES
-(1, 9167634684, 'Anuj', 'namita');
+(5, 654, 'Ankit', 'caf1a3dfb505ffed0d024130f58c5cfa'),
+(7, 9167044242, 'namrata', 'd8578edf8458ce06fbc5bb76a58c5ca4');
 
 -- --------------------------------------------------------
 
@@ -91,7 +95,7 @@ INSERT INTO `farmer` (`fid`, `phno`, `name`, `password`) VALUES
 
 CREATE TABLE `q` (
   `qid` varchar(30) NOT NULL,
-  `fid` int(11) NOT NULL DEFAULT '1',
+  `fid` int(11) NOT NULL,
   `solved` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -100,8 +104,7 @@ CREATE TABLE `q` (
 --
 
 INSERT INTO `q` (`qid`, `fid`, `solved`) VALUES
-('5b0f9fb4004648.55800097.txt', 1, 0),
-('5b0faf35cfb8a6.00483659.txt', 1, 0);
+('5b12e77123c4c3.51598696.txt', 7, 0);
 
 -- --------------------------------------------------------
 
@@ -123,7 +126,7 @@ CREATE TABLE `qimgtext` (
 CREATE TABLE `qs` (
   `qid` varchar(30) NOT NULL,
   `sid` varchar(30) NOT NULL,
-  `eid` int(11) NOT NULL DEFAULT '21'
+  `eid` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -146,14 +149,6 @@ CREATE TABLE `q_tag` (
   `tag` varchar(10) NOT NULL,
   `qid` varchar(30) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `q_tag`
---
-
-INSERT INTO `q_tag` (`tag`, `qid`) VALUES
-('Crop', '5b0f9fb4004648.55800097.txt'),
-('Soil', '5b0f9fb4004648.55800097.txt');
 
 -- --------------------------------------------------------
 
@@ -186,6 +181,28 @@ INSERT INTO `tags` (`tag`) VALUES
 ('Seeds'),
 ('Soil'),
 ('Weather');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tags_q`
+--
+
+CREATE TABLE `tags_q` (
+  `tags` varchar(64) NOT NULL,
+  `qid` varchar(30) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `tags_q`
+--
+
+INSERT INTO `tags_q` (`tags`, `qid`) VALUES
+('Peter', '40'),
+('Ben', '40'),
+('Joe', '40'),
+('Peter', '41'),
+('Loe', '41');
 
 --
 -- Indexes for dumped tables
@@ -237,13 +254,13 @@ ALTER TABLE `qimgtext`
 --
 ALTER TABLE `qs`
   ADD PRIMARY KEY (`sid`),
-  ADD KEY `qid` (`qid`);
+  ADD KEY `qid` (`qid`),
+  ADD KEY `eid` (`eid`);
 
 --
 -- Indexes for table `q_tag`
 --
 ALTER TABLE `q_tag`
-  ADD KEY `qid` (`qid`),
   ADD KEY `tag` (`tag`);
 
 --
@@ -267,13 +284,13 @@ ALTER TABLE `tags`
 -- AUTO_INCREMENT for table `expert`
 --
 ALTER TABLE `expert`
-  MODIFY `eid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `eid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=502;
 
 --
 -- AUTO_INCREMENT for table `farmer`
 --
 ALTER TABLE `farmer`
-  MODIFY `fid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `fid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- Constraints for dumped tables
@@ -307,13 +324,13 @@ ALTER TABLE `qimgtext`
 -- Constraints for table `qs`
 --
 ALTER TABLE `qs`
+  ADD CONSTRAINT `exp_fk_sol` FOREIGN KEY (`eid`) REFERENCES `expert` (`eid`),
   ADD CONSTRAINT `question_qid_fk` FOREIGN KEY (`qid`) REFERENCES `q` (`qid`);
 
 --
 -- Constraints for table `q_tag`
 --
 ALTER TABLE `q_tag`
-  ADD CONSTRAINT `q_tag_fk` FOREIGN KEY (`qid`) REFERENCES `q` (`qid`),
   ADD CONSTRAINT `tag_fk` FOREIGN KEY (`tag`) REFERENCES `tags` (`tag`);
 
 --
