@@ -95,7 +95,7 @@
             <button class="btn btn-lg" type="submit"> Add/Edit </button>
         </form>
         <hr>
-        <form onsubmit="addVal('irrigation');" action="#" method="POST">
+        <form onsubmit="addVal('irrigation');" action="" method="POST">
             <div class=" form-group ">
                 <label for="irrigation">
                     <h5>irrigation type: </h5>
@@ -140,15 +140,6 @@
             <button class="btn btn-lg" type="submit"> Add/Edit </button>
         </form>
     </div>
-
-    <script type="text/javascript">
-        function addVal(val){
-            var temp = document.getElementById(val);
-            console.log(temp.value); 
-
-        }
-    </script>
-
     <script type="text/javascript ">
         function googleTranslateElementInit() {
           new google.translate.TranslateElement({pageLanguage: 'en', layout: google.translate.TranslateElement.InlineLayout.SIMPLE}, 'google_translate_element');

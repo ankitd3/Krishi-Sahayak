@@ -1,4 +1,47 @@
 .textques, .imgques, .audioques{
     background-color: #FEFFD5;
-
 }
+
+.textComment, .imgComment, .audioComment{
+    background-color: #e1e1ea;
+}
+
+
+
+/*
+
+
+      <!-- COMMENTS BEAUTIFY IT LIKE IN testOption.html
+      <form id="comment" action = "comments.php" enctype="multipart/form-data" method="POST">
+          <div class="form-group">
+              <input type="text" id="audioComment" name="qid">
+              <label for="audio_file">Upload audio here</label>
+              <input type="file" name="audio_file" accept = "audio/*" class="form-control-file" id="audio_file">
+          </div>
+              <button type="submit" name="submit_audio" class="btn btn-lg">Post</button>       
+      </form>
+
+      <form action = "comments.php" method="POST">
+          <div class="form-group">
+
+              <input type="text" id="textComment" name="qid">
+
+              <label for="text">Type question here</label>
+              <textarea class="form-control" name="text" rows="5" id="text"></textarea>
+          </div>
+          <button type="submit" name="submit_text" class="btn btn-lg">Post</button>       
+      </form> 
+
+      <form action = "comments.php" enctype="multipart/form-data" method="POST">
+          <div class="form-group">
+              <input type="text" id="imgComment" name="qid">
+              <label for="img_file">Upload your image here</label>
+              <input type="file" name="img_file" class="form-control-file" id="img_file">
+          </div>
+          <div class="form-group">
+              <label for="info">Question details:</label>
+              <textarea class="form-control" name="text_file" rows="5" id="info"></textarea>
+          </div>
+          <button type="submit" name="submit_img" class="btn btn-lg">Post</button>       
+      </form>
+      END OF COMMENTS FORMS --> */

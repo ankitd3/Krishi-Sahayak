@@ -37,7 +37,7 @@ if(isset($_POST['submit_form'])){
 			$_SESSION['name'] = $name;
 			$_SESSION['id'] = $id;
 			$_SESSION['type'] = "farmer";
-			header('Location: ../question.html');
+			header('Location: ../uploadques.html');
 		}
 		else{
 			echo "FAIL";
@@ -61,10 +61,10 @@ if(isset($_POST['submit_form'])){
 			$_SESSION['name'] = $name;
 			$_SESSION['id'] = $id;
 			$_SESSION['type'] = "expert";
-			header('Location: ../index.php');
+			header('Location: ../indexForExpert.php');
 		}
 		else{
-			echo "FAIL";
+			echo "FAIL EXP";
 		}
 	}
 }

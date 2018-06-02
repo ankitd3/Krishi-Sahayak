@@ -25,27 +25,7 @@
 
     <!--navigation menu-->
     <nav id="mainmenu" class="navbar navbar-expand-md">
-        <a href="#" style="color: #FAFEF9" class="navbar-brand"> Krishi Sahayak </a>
-
-        <!--button for collapse toggler-->
-        <button type="button" data-target="#menu" data-toggle="collapse" aria-controls="menu" aria-expanded="false" aria-label="toggle navigation"
-            class="navbar-toggler navbar-dark">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="menu">
-
-            <ul class="navbar-nav ml-auto">
-                <li class="nav-item active">
-                    <a class="nav-link" href="#">Ask question</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Frequently asked</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">My questions</a>
-                </li>
-            </ul>
-        </div>
+        <a href="#" style="color: #FAFEF9" class="navbar-brand"> Q/A App for Farmers </a>
     </nav>
 
     <div class="container text-center">
@@ -81,15 +61,26 @@
                       </label>
                     </div>
 
-                    <div class="input-container">
-                        <i style="background-color:#2b5e40" class="fa fa-user icon"></i>
-                        <input class="input-field" type="number" placeholder="Phone Number" name="phno" id="phno" required>
-                    </div>
+                      <div class="form-group">
+    <label for="phno">Phone Number</label>
+    <i style="background-color:#2b5e40" class="fa fa-user icon"></i>
+    <input type="number" class="form-control" id="phno" aria-describedby="phone number">
+    <small id="phone number" class="form-text text-muted">We'll never share your phone number with anyone else.</small>
+  </div>
 
                     <div class="input-container">
+                        <label for="psw">Password</label>
                         <i style="background-color:#2b5e40" class="fa fa-key icon"></i>
-                        <input class="input-field" type="password" placeholder="Password" name="psw" required>
+                        <input class="input-field" type="password" name="psw" required>
                     </div>
+
+
+                      <div class="form-group">
+    <label for="psw">Password</label>
+    <i style="background-color:#2b5e40" class="fa fa-key icon"></i>
+    <input type="password" class="form-control" id="psw" name = "psw" aria-describedby="phone number">
+    <small id="phone number" class="form-text text-muted">We'll never share your phone number with anyone else.</small>
+  </div>
                     <center>
                         <div class="col-md-3">
                             <button style="background-color:#2b5e40; color:#FAFEF9" type="submit" name="submit_form" class="btn">Login</button>

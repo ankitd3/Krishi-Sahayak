@@ -2,8 +2,13 @@
 
 session_start();
 
-$fName = $_SESSION['name'];
-$fid = $_SESSION['id'];
+if(isset($_SESSION['name'])){
+  $name = $_SESSION['name'];
+  $fid = $_SESSION['id'];
+}
+else{
+  header('Location: login.html');
+}
 
 require __DIR__ . '/vendor/autoload.php';
 	# Imports the Google Cloud client library
@@ -74,6 +79,7 @@ if(isset($_POST['submit_text'])||isset($_POST['submit_img'])||isset($_POST['subm
 					fwrite($myfile, $var." n6a6m6i6t6a ");
 					fclose($myfile);
 					translateLang($textFileNewName,$var);
+
 					$wordsTags = autoTagging($textFileNewName);
 					updateTag($wordsTags,basename($fileNewName));
 				}
@@ -83,6 +89,7 @@ if(isset($_POST['submit_text'])||isset($_POST['submit_img'])||isset($_POST['subm
 		}
 	}
 	elseif (!empty($_POST['text'])) {
+
 		$dir='Question/';
 		$fileName = uniqid('',true).".txt";
 		$fileNewName = $dir.$fileName;
@@ -92,10 +99,11 @@ if(isset($_POST['submit_text'])||isset($_POST['submit_img'])||isset($_POST['subm
 		fwrite($myfile, $var." n6a6m6i6t6a ");
 		fclose($myfile);
 		translateLang($fileNewName,$var);
+
 		$wordsTags = autoTagging($fileNewName);
 		updateTag($wordsTags,$fileName);
 	}
-	//header('Location: index.php');
+	header('Location: indexForFarmer.php');
 }
 function translateLang($file,$input){
 	$translate = new TranslateClient([
@@ -107,9 +115,14 @@ function translateLang($file,$input){
 		    'target' => 'en'
 		]);
 		$append = " ".$result['text'];
-		$myfile = file_put_contents($file, $append.PHP_EOL , FILE_APPEND | LOCK_EX);
+		//$myfile = file_put_contents($file, $append.PHP_EOL , FILE_APPEND | LOCK_EX);
 	}
+	else{
+		$append = " ";
+	}
+	$myfile = file_put_contents($file, $append.PHP_EOL , FILE_APPEND | LOCK_EX);
 }
+
 function autoTagging($fullFile){
 	$str = file_get_contents($fullFile);
 	$wordsTags=array();
@@ -132,7 +145,7 @@ function autoTagging($fullFile){
 function updateTag($tags,$qid){
 	$l=count($tags);
 	for($x = 0; $x < $l; $x++) {
-    	
+
     	$sql = "INSERT INTO q_tag (tag,qid) VALUES ('".$tags[$x]."','".$qid."')";
 		if ($GLOBALS['conn']->query($sql) === TRUE) {
 		    echo "New record created successfully";

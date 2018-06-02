@@ -1,4 +1,4 @@
-<!--template for all pages-->
+<!-- Ask question page 1 for farmer-->
 <!DOCTYPE html>
 <html lang="en">
 
@@ -7,7 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <title>Bootstrap 101 Template</title>
+    <title>Ask question page 1 for farmer</title>
 
     <!-- Bootstrap -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
@@ -30,16 +30,16 @@
 
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item active">
-                    <a class="nav-link" href="#">Ask question</a>
+                    <a class="nav-link" href="uploadques.html">Ask question</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Frequently asked</a>
+                    <a class="nav-link" href="indexForFarmer.php">Browse All</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">My questions</a>
+                    <a class="nav-link" href="indexMyQuestions.php">My questions</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Signout</a>
+                    <a class="nav-link" href="php/logout.php">Signout</a>
                 </li>
             </ul>
         </div>
@@ -51,8 +51,155 @@
     <hr>
 
     <div class="container">
+        <!-- tell me how to display the different question types here-->
+    </div>
+
+    <!--starting with different ans types here-->
+    <div class="container">
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item">
+                <a style="color:#2b5e40" class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home"
+                    aria-selected="true">Audio</a>
+            </li>
+            <li class="nav-item">
+                <a style="color:#2b5e40" class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile"
+                    aria-selected="false">Image + text</a>
+            </li>
+            <li class="nav-item">
+                <a style="color:#2b5e40" class="nav-link" id="text-tab" data-toggle="tab" href="#text1" role="tab" aria-controls="text" aria-selected="false">
+                Text</a>
+            </li>
+        </ul>
+
+        <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                <br>
+                <form action = "Question.php" enctype="multipart/form-data" method="POST">
+
+                    <div class="form-group">
+                        <label for="audio_file"><h5>Choose audio files</h5></label>
+                        <input type="file" name="audio_file" accept = "audio/*" class="form-control-file" id="audio_file">
+                    </div>
+                        <button type="submit" name="submit_audio" class="btn btn-lg">Post</button>       
+                </form>
+            </div>
+            <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+
+                <form action="Question.php" enctype="multipart/form-data" method="POST">
+
+                    <div class="form-group">
+                        <br>
+                        <label for="img_file"> <h5>Choose image from device:</h5> </label>
+                        <input type="file" name="img_file" class="form-control-file" id="img_file">
+                    </div>
+                    <div class="form-group">
+                        <label for="info"><h5>Solution:</h5></label>
+                        <br>
+                        <button class="btn btn-md" type="button" onclick="start('info');"> Click here to start recording text </button>
+                        <select onchange="changeLanguage('lang_img_text');" id="lang_img_text">
+                            <option value="mr">Marathi</option>
+                            <option value="hi">Hindi</option>
+                            <option value="en-IN">English</option>
+                            <option value="ml">Malayalam</option>
+                            <option value="te">Telugu</option>
+                            <option value="gu">Gujarati</option>
+                            <option value="as">Assamese</option>
+                            <option value="bn">Bengali</option>
+                            <option value="as">Assamese</option>
+                            <option value="or">Oriya</option>
+                            <option value="pa">Punjabi</option>
+                            <option value="sa">Sanskrit</option>
+                            <option value="sd">Sindhi</option>
+                            <option value="sa">Sanskrit</option>
+                            <option value="ur">Urdu</option>
+                        </select>
+                        <textarea class="form-control" name="text_file" rows="10" id="info"></textarea>
+                    </div>
+                    <button type="submit" name="submit_img" class="btn btn-lg">Post</button>
+                </form>
+            </div>
+            <div class="tab-pane fade" id="text1" role="tabpanel" aria-labelledby="text-tab">
+
+                    <form action="Question.php" enctype="multipart/form-data" method="POST">
+
+                        <div class="form-group">
+                            <label for="info"><h5>Solution:</h5></label>
+                            <br>
+                            <button class="btn btn-md" type="button" onclick="start('text');"> Click here to start recording text </button>
+                            <select onchange="changeLanguage('lang_text');" id="lang_text">
+                                <option value="mr">Marathi</option>
+                                <option value="hi">Hindi</option>
+                                <option value="en-IN">English</option>
+                                <option value="ml">Malayalam</option>
+                                <option value="te">Telugu</option>
+                                <option value="gu">Gujarati</option>
+                                <option value="as">Assamese</option>
+                                <option value="bn">Bengali</option>
+                                <option value="as">Assamese</option>
+                                <option value="or">Oriya</option>
+                                <option value="pa">Punjabi</option>
+                                <option value="sa">Sanskrit</option>
+                                <option value="sd">Sindhi</option>
+                                <option value="sa">Sanskrit</option>
+                                <option value="ur">Urdu</option>
+                            </select>
+                            <textarea class="form-control" name="text" rows="10" id="text"></textarea>
+                        </div>
+                        <button type="submit" name="submit_text" class="btn btn-lg">Post</button>
+                    </form>
+                </div>
+        </div>
 
     </div>
+
+    <script type="text/javascript">
+
+        var lang;
+
+        function changeLanguage (l){
+            var x = document.getElementById(l);
+            lang = x.value;
+        }
+
+        function start (id) {
+
+            var r = document.getElementById(id);
+
+            if('webkitSpeechRecognition' in window){
+                var speechRecognizer = new webkitSpeechRecognition();
+                speechRecognizer.continuous = true;
+                speechRecognizer.interimResults = true;
+                speechRecognizer.lang = lang;
+                speechRecognizer.start();
+
+                var finalTranscripts = '';
+
+                speechRecognizer.onresult = function(event){
+                    var interimTranscripts = '';
+                    for(var i = event.resultIndex; i < event.results.length; i++){
+                        var transcript = event.results[i][0].transcript;
+                        transcript.replace("\n", "<br>");
+                        if(event.results[i].isFinal){
+                            finalTranscripts += transcript;
+                        }else{
+                            interimTranscripts += transcript;
+                        }
+                    }
+                    r.innerHTML = finalTranscripts + interimTranscripts;
+                };
+                speechRecognizer.onerror = function (event) {
+                };
+            }else{
+                r.innerHTML = 'Your browser is not supported. If google chrome, please upgrade!';
+            }
+        }
+</script>
+
+
+
+
+    <!--scripts start here-->
+
     <script type="text/javascript">
         function googleTranslateElementInit() {
             new google.translate.TranslateElement({ pageLanguage: 'en', layout: google.translate.TranslateElement.InlineLayout.SIMPLE }, 'google_translate_element');

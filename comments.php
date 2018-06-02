@@ -2,7 +2,14 @@
 
 session_start();
 
-$name = $_SESSION['name'];
+if(isset($_SESSION['name'])){
+  $name = $_SESSION['name'];
+  $id = $_SESSION['id'];
+  $type = $_SESSION['type'];
+}
+else{
+  header('Location: login.html');
+}
 
 require __DIR__ . '/vendor/autoload.php';
 	# Imports the Google Cloud client library
@@ -91,6 +98,12 @@ if(isset($_POST['submit_text'])||isset($_POST['submit_img'])||isset($_POST['subm
 		fclose($myfile);
 		translateLang($fileNewName,$var);
 	}
+	if(strcmp($type,"expert")==0){
+		header('Location: indexForExpert.php');
+	}
+	else(strcmp($type,"farmer")==0){
+		header('Location: indexForFarmer.php');
+	}
 }
 
 function translateLang($file,$input){
@@ -103,8 +116,12 @@ function translateLang($file,$input){
 		    'target' => 'en'
 		]);
 		$append = " ".$result['text'];
-		$myfile = file_put_contents($file, $append.PHP_EOL , FILE_APPEND | LOCK_EX);
+		//$myfile = file_put_contents($file, $append.PHP_EOL , FILE_APPEND | LOCK_EX);
 	}
+	else{
+		$append = " ";
+	}
+	$myfile = file_put_contents($file, $append.PHP_EOL , FILE_APPEND | LOCK_EX);
 }
 
 function insertImgText($text,$img){

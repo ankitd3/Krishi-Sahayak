@@ -2,7 +2,13 @@
 
 session_start();
 
-$id = $_SESSION['id'];
+if(isset($_SESSION['name'])){
+  $name = $_SESSION['name'];
+  $id = $_SESSION['id'];
+}
+else{
+  header('Location: login.html');
+}
 //$id = "25";
 
 require __DIR__ . '/vendor/autoload.php';
@@ -115,6 +121,7 @@ if(isset($_POST['submit_text'])||isset($_POST['submit_img'])||isset($_POST['subm
 
 		translateLang($fileNewName,$var);
 	}
+	header('Location: indexMyQuestions.php');
 }
 
 function translateLang($file,$input){
@@ -132,11 +139,12 @@ function translateLang($file,$input){
 		]);
 
 		$append = " ".$result['text'];
-
-		$myfile = file_put_contents($file, $append.PHP_EOL , FILE_APPEND | LOCK_EX);
-
+		//$myfile = file_put_contents($file, $append.PHP_EOL , FILE_APPEND | LOCK_EX);
 	}
-
+	else{
+		$append = " ";
+	}
+	$myfile = file_put_contents($file, $append.PHP_EOL , FILE_APPEND | LOCK_EX);
 }
 
 function insertImgText($text,$img){
