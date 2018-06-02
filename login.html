@@ -38,7 +38,8 @@
         <!--defining tab headings-->
         <ul class="nav nav-tabs" id="myTab" role="tablist">
             <li class="nav-item">
-                <a style="color:#2b5e40" class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Login</a>
+                <a style="color:#2b5e40" class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home"
+                    aria-selected="true">Login</a>
             </li>
             <li class="nav-item">
                 <a style="color:#2b5e40" class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile"
@@ -50,37 +51,36 @@
                 <br>
                 <form action="php/login.php" method="POST">
 
+                    <!--optradio, phno, psw-->
+                    <label for="phno">Phone Number</label>
+                    <div class="input-group mb-2 mr-sm-2">
+                        <div class="input-group-prepend">
+                            <i style="background-color:#2b5e40" class="fa fa-user icon"></i>
+                        </div>
+                        <input required type="number" class="form-control" name="phno" id="phno">
+                    </div>
+
+                    <!--phno done-->
+                    <label for="psw">Password</label>
+                    <div class="input-group mb-2 mr-sm-2">
+                        <div class="input-group-prepend">
+                            <i style="background-color:#2b5e40" class="fa fa-key icon"></i>
+                        </div>
+                        <input required type="password" class="form-control" name="psw" id="psw">
+                    </div>
+                                        <!--psw done-->
                     <div class="form-check form-check-inline">
-                      <label class="form-check-label" for="radioF">
-                        <input type="radio" class="form-check-input" id="rF" name="optradio" value="1" checked>Farmer
-                      </label>
+                        <label class="form-check-label" for="radioF">
+                            <input type="radio" class="form-check-input" id="rF" name="optradio" value="1" checked>Farmer
+                        </label>
                     </div>
+
                     <div class="form-check form-check-inline">
-                      <label class="form-check-label" for="radioE">
-                        <input type="radio" class="form-check-input" id="rE" name="optradio" value="2">Expert
-                      </label>
+                        <label class="form-check-label" for="radioE">
+                            <input type="radio" class="form-check-input" id="rE" name="optradio" value="2">Expert
+                        </label>
                     </div>
-
-                      <div class="form-group">
-    <label for="phno">Phone Number</label>
-    <i style="background-color:#2b5e40" class="fa fa-user icon"></i>
-    <input type="number" class="form-control" id="phno" aria-describedby="phone number">
-    <small id="phone number" class="form-text text-muted">We'll never share your phone number with anyone else.</small>
-  </div>
-
-                    <div class="input-container">
-                        <label for="psw">Password</label>
-                        <i style="background-color:#2b5e40" class="fa fa-key icon"></i>
-                        <input class="input-field" type="password" name="psw" required>
-                    </div>
-
-
-                      <div class="form-group">
-    <label for="psw">Password</label>
-    <i style="background-color:#2b5e40" class="fa fa-key icon"></i>
-    <input type="password" class="form-control" id="psw" name = "psw" aria-describedby="phone number">
-    <small id="phone number" class="form-text text-muted">We'll never share your phone number with anyone else.</small>
-  </div>
+                    <!--optradio done-->
                     <center>
                         <div class="col-md-3">
                             <button style="background-color:#2b5e40; color:#FAFEF9" type="submit" name="submit_form" class="btn">Login</button>
@@ -88,69 +88,87 @@
                     </center>
                 </form>
             </div>
+
+
             <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
 
                 <form action="php/register.php" method="POST">
+                    <!--name,regphno,regpsw1,optradio-->
+                    <label for="name">Name</label>
+                    <div class="input-group mb-2 mr-sm-2">
+                        <div class="input-group-prepend">
+                            <i style="background-color:#2b5e40" class="fa fa-user icon"></i>
+                        </div>
+                        <input required type="text" class="form-control" name="name" id="name">
+                    </div>
 
+                    <!--name done-->
+
+                    <label for="regphno">Phone Number</label>
+                    <div class="input-group mb-2 mr-sm-2">
+                        <div class="input-group-prepend">
+                            <i style="background-color:#2b5e40" class="fa fa-user icon"></i>
+                        </div>
+                        <input required type="number" class="form-control" name="regphno" id="regphno">
+                    </div>
+                    <!--regphno done-->
+
+                    <label for="regpsw1">Password</label>
+                    <div class="input-group mb-2 mr-sm-2">
+                        <div class="input-group-prepend">
+                            <i style="background-color:#2b5e40" class="fa fa-key icon"></i>
+                        </div>
+                        <input required type="text" class="form-control" name="regpsw1" id="regpsw1">
+                    </div>
+                    <!--regpsw1 done-->
+
+                    <label for="regpsw2">Re-enter Password</label>
+                    <div class="input-group mb-2 mr-sm-2">
+                        <div class="input-group-prepend">
+                            <i style="background-color:#2b5e40" class="fa fa-key icon"></i>
+                        </div>
+                        <input required type="text" class="form-control" name="regpsw2" id="regpsw2">
+                    </div>
+                    <!--regpsw2 done-->
                     <div class="form-check form-check-inline">
-                      <label class="form-check-label" for="radioF">
-                        <input type="radio" class="form-check-input" id="radioF" name="optradio" value="1" checked onclick="secretCheck();">Farmer
-                      </label>
-                    </div>
-                    <div class="form-check form-check-inline">
-                      <label class="form-check-label" for="radioE">
-                        <input type="radio" class="form-check-input" id="radioE" name="optradio" value="2" onclick="secretCheck();">Expert
-                      </label>
-                    </div>
-
-                    <div style="display: none;" id="secret" class="form-group">
-                      <label for="usr">Code:</label>
-                      <input type="number" class="form-control" id="usr" name="code" placeholder="Code">
-                    </div>
-
-                    <div class="input-container">
-                        <i style="background-color:#2b5e40" class="fa fa-user icon"></i>
-                        <input class="input-field" type="text" placeholder="Name" name="name" id="name" required>
-                    </div>
-
-                    <div class="input-container">
-                        <i style="background-color:#2b5e40" class="fa fa-user icon"></i>
-                        <input class="input-field" type="number" placeholder="Phone Number" name="regphno" id="regphno" required>
-                    </div>
-
-                    <div class="input-container">
-                        <i style="background-color:#2b5e40" class="fa fa-key icon"></i>
-                        <input class="input-field" type="password" placeholder="Password" name="regpsw1" required>
-                    </div>
-                    <div class="input-container">
-                        <i style="background-color:#2b5e40" class="fa fa-key icon"></i>
-                        <input class="input-field" type="password" placeholder="Re-enter password" name="regpsw2" required>
-                    </div>
-                    <center>
+                            <label class="form-check-label" for="radioF">
+                                <input type="radio" class="form-check-input" id="radioF" name="optradio" value="1" checked onclick="secretCheck();">Farmer
+                            </label>
+                        </div>
+    
+                        <div class="form-check form-check-inline">
+                            <label class="form-check-label" for="radioE">
+                                <input type="radio" class="form-check-input" id="radioE" name="optradio" value="2" onclick="secretCheck();">Expert
+                            </label>
+                        </div>
+                        <div style="display: none;" id="secret" class="form-group">
+                                <label for="usr">Code : </label>
+                                <input type="number" class="form-control" id="usr" name="code" placeholder="Code">
+                        </div>
+                        <center>
                         <div class="col-md-3">
                             <button type="submit" style="background-color:#2b5e40;color:#FAFEF9" name="submit_form" class="btn">Register</button>
                         </div>
                     </center>
                 </form>
-
             </div>
         </div>
     </div>
 
     <script type="text/javascript">
-          //console.log(id2);
-    function secretCheck(){
-           var radioE = document.getElementById('radioE'); 
-           var radioF = document.getElementById('radioF'); 
-           var dis = document.getElementById('secret');
+        //console.log(id2);
+        function secretCheck() {
+            var radioE = document.getElementById('radioE');
+            var radioF = document.getElementById('radioF');
+            var dis = document.getElementById('secret');
 
-           if(radioE.checked){
-            dis.style.display = "block";
-           }
-           else if(radioF.checked){
-            dis.style.display = "none";
-           }
-    }
+            if (radioE.checked) {
+                dis.style.display = "block";
+            }
+            else if (radioF.checked) {
+                dis.style.display = "none";
+            }
+        }
 
     </script>
 
