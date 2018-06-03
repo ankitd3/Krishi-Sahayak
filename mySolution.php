@@ -3,14 +3,14 @@
 session_start();
 
 if(isset($_SESSION['name'])){
+
   $name = $_SESSION['name'];
   $id = $_SESSION['id'];
+
 }
 else{
   header('Location: login.html');
 }
-
-$tag = $_GET['tag'];
 
 $servername = "localhost";
 $username = "root";
@@ -23,14 +23,13 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 //$sqlSolved = "SELECT qid,sid FROM qs WHERE qid in (select qid from q where q\.solved = 1)";
-$sqlSolved = "SELECT * FROM q WHERE (solved = 1) AND qid IN (SELECT qid FROM q_tag WHERE tag LIKE '%".$tag."%')";
-$sqlUnsolved = "SELECT * FROM q WHERE (solved = 0) AND qid IN (SELECT qid FROM q_tag WHERE tag LIKE '%".$tag."%')";
+$sqlSolved = "SELECT * FROM q WHERE (solved = 1) AND qid IN (SELECT qid FROM qs WHERE eid = '".$id."')";
 
 $allowedAudio = array('mp3','ogg'); //accepted file types
 $allowedImage = array('jpeg','jpg','png'); //accepted file types
 
 $solved = fetchQuestion($sqlSolved,1);//1-Solved
-$unsolved = fetchQuestion($sqlUnsolved,0);//0-Solved
+//$unsolved = fetchQuestion($sqlUnsolved,0);//0-Solved
 
 function fetchQuestion($sql,$solved){
   $temp = "";
@@ -71,10 +70,12 @@ function fetchQuestion($sql,$solved){
 
             $temp = makeText($fileName,$farmer_name,$temp,"Question");
           }
-
           //attach solution(if any)
           if($solved!=0){
             $temp = fetchSolution($fileName,$temp);
+          }
+          else{
+            $temp = $temp."<a href='SolutionE.php?qid=".$fileName."'><button type=\"button\" class=\"btn btn-md\"> SOLVE </button></a>";
           }
           $temp = $temp . "
           <button onclick=\"addQid('".$fileName."');\" type=\"button\" class=\"btn btn-md\" data-toggle=\"modal\" data-target=\"#myModal\">
@@ -97,9 +98,9 @@ function fetchTags($qid){
       // output data of each row
       while($row = $result->fetch_assoc()) {
           $tag= $row["tag"];
+          array_push($tags, $tag);
       }
     }
-  $tags = explode(',', $tag);
   return $tags;
 }
 
@@ -450,17 +451,17 @@ $conn->close();
         <div class="collapse navbar-collapse" id="menu">
 
             <ul class="navbar-nav ml-auto">
-                <li class="nav-item active">
-                    <a class="nav-link" href="#">Ask question</a>
+<!--                 <li class="nav-item active">
+                    <a class="nav-link" href="uploadques.html">Solve Questions</a>
+                </li> -->
+                <li class="nav-item">
+                    <a class="nav-link" href="indexForExpert.php">Browse All</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Frequently asked</a>
+                    <a class="nav-link" href="indexMyQuestions.php">Questions You SOlved</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">My questions</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Signout</a>
+                    <a class="nav-link" href="php/logout.php">Signout</a>
                 </li>
             </ul>
         </div>
@@ -476,30 +477,8 @@ $conn->close();
     <div class="container">
 
         <!--defining tab headings-->
-        <ul class="nav nav-tabs" id="myTab" role="tablist">
-            <li class="nav-item">
-                <a style="color:#2b5e40" class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Solved</a>
-            </li>
-            <li class="nav-item">
-                <a style="color:#2b5e40" class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile"
-                    aria-selected="false">Unsolved</a>
-            </li>
-        </ul>
+        <?php echo $solved;?>
 
-        <div class="tab-content" id="myTabContent">
-            <!--SOLVED DIV-->
-            <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
-
-                <?php echo $solved;?>
-
-            </div>
-            <!--UNSOLVED DIV-->
-            <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-                  
-                <?php echo $unsolved;?>
-
-            </div>
-        </div>
     </div>
 
 
@@ -541,7 +520,7 @@ $conn->close();
                             
                             <label for="audio_file"><h5>Choose audio files</h5></label>
                             
-                            <input type="text" id="audioComment" name="qid">
+                            <input style="display: none;" type="text" id="audioComment" name="qid">
                             
                             <input type="file" name="audio_file" accept = "audio/*" class="form-control-file" id="audio_file">
                         </div>
@@ -556,7 +535,7 @@ $conn->close();
                             <br>
                             <label for="img_file"> <h5>Choose image from device:</h5> </label>
                             
-                            <input type="text" id="imgComment" name="qid">
+                            <input style="display: none;" type="text" id="imgComment" name="qid">
 
                             <input type="file" name="img_file" class="form-control-file" id="img_file">
                         </div>
@@ -590,7 +569,7 @@ $conn->close();
 
                         <form action="Comments.php" enctype="multipart/form-data" method="POST">
 
-                          <input type="text" id="textComment" name="qid">
+                          <input style="display: none;" type="text" id="textComment" name="qid">
                             
                             <div class="form-group">
                                 <label for="info"><h5>Solution:</h5></label>
@@ -620,8 +599,6 @@ $conn->close();
                 </div>
               </div>
 
-
-
             </div>
             <!-- Modal body END -->
             <!-- Modal footer -->
@@ -632,9 +609,6 @@ $conn->close();
           </div>
         </div>
       </div>
-
-
-
 
     <script type="text/javascript">
         function addQid(qid){

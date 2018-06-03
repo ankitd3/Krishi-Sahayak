@@ -99,9 +99,9 @@ function fetchTags($qid){
       // output data of each row
       while($row = $result->fetch_assoc()) {
           $tag= $row["tag"];
-          array_push($tags, $tag);
       }
     }
+  $tags = explode(',', $tag);
   return $tags;
 }
 

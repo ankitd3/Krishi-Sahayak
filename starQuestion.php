@@ -10,8 +10,6 @@ else{
   header('Location: login.html');
 }
 
-$tag = $_GET['tag'];
-
 $servername = "localhost";
 $username = "root";
 $password = "";
@@ -23,8 +21,8 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 //$sqlSolved = "SELECT qid,sid FROM qs WHERE qid in (select qid from q where q\.solved = 1)";
-$sqlSolved = "SELECT * FROM q WHERE (solved = 1) AND qid IN (SELECT qid FROM q_tag WHERE tag LIKE '%".$tag."%')";
-$sqlUnsolved = "SELECT * FROM q WHERE (solved = 0) AND qid IN (SELECT qid FROM q_tag WHERE tag LIKE '%".$tag."%')";
+$sqlSolved = "SELECT * FROM q WHERE solved = 1 AND qid IN (SELECT qid FROM star WHERE fid = ".$id.")";
+$sqlUnsolved = "SELECT * FROM q WHERE solved = 0 AND qid IN (SELECT qid FROM star WHERE fid = ".$id.")";
 
 $allowedAudio = array('mp3','ogg'); //accepted file types
 $allowedImage = array('jpeg','jpg','png'); //accepted file types
@@ -71,6 +69,10 @@ function fetchQuestion($sql,$solved){
 
             $temp = makeText($fileName,$farmer_name,$temp,"Question");
           }
+          $temp = $temp . "
+          <button onclick=\"starQid('".$fileName."');\" type=\"button\" class=\"btn btn-md\">
+            STAR
+          </button>";
 
           //attach solution(if any)
           if($solved!=0){
@@ -451,16 +453,19 @@ $conn->close();
 
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item active">
-                    <a class="nav-link" href="#">Ask question</a>
+                    <a class="nav-link" href="uploadques.html">Ask question</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Frequently asked</a>
+                    <a class="nav-link" href="indexForFarmer.php">Browse All</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">My questions</a>
+                    <a class="nav-link" href="indexMyQuestions.php">My questions</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Signout</a>
+                    <a class="nav-link" href="starQuestions.php">Starred questions</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="php/logout.php">Signout</a>
                 </li>
             </ul>
         </div>
@@ -500,6 +505,10 @@ $conn->close();
 
             </div>
         </div>
+        <form action="php/star.php" method="POST" id="starForm">
+                  <input style="display: none;" type="text" id="starQid" name="starQid">
+                  <input style="display: none;"  type="text" id="starQid" name="starFid" value="<?php echo $_SESSION['id']; ?>">
+        </form>
     </div>
 
 
@@ -541,7 +550,7 @@ $conn->close();
                             
                             <label for="audio_file"><h5>Choose audio files</h5></label>
                             
-                            <input type="text" id="audioComment" name="qid">
+                            <input style="display: none;" type="text" id="audioComment" name="qid">
                             
                             <input type="file" name="audio_file" accept = "audio/*" class="form-control-file" id="audio_file">
                         </div>
@@ -556,7 +565,7 @@ $conn->close();
                             <br>
                             <label for="img_file"> <h5>Choose image from device:</h5> </label>
                             
-                            <input type="text" id="imgComment" name="qid">
+                            <input style="display: none;" type="text" id="imgComment" name="qid">
 
                             <input type="file" name="img_file" class="form-control-file" id="img_file">
                         </div>
@@ -590,7 +599,7 @@ $conn->close();
 
                         <form action="Comments.php" enctype="multipart/form-data" method="POST">
 
-                          <input type="text" id="textComment" name="qid">
+                          <input style="display: none;" type="text" id="textComment" name="qid">
                             
                             <div class="form-group">
                                 <label for="info"><h5>Solution:</h5></label>
@@ -620,15 +629,12 @@ $conn->close();
                 </div>
               </div>
 
-
-
             </div>
             <!-- Modal body END -->
             <!-- Modal footer -->
             <div class="modal-footer">
               <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
             </div>
-            
           </div>
         </div>
       </div>
@@ -636,7 +642,15 @@ $conn->close();
 
 
 
+
+
     <script type="text/javascript">
+
+        function starQid(qid){
+          document.getElementById('starQid').value=qid;
+          document.getElementById("starForm").submit();
+
+        }
         function addQid(qid){
           document.getElementById('audioComment').value=qid;
           document.getElementById('imgComment').value=qid;

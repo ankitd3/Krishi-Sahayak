@@ -2,9 +2,13 @@
 
 session_start();
 
-$name = $_SESSION['name'];
-$id = $_SESSION['id'];
-
+if(isset($_SESSION['name'])){
+  $name = $_SESSION['name'];
+  $id = $_SESSION['id'];
+}
+else{
+  header('Location: login.html');
+}
 
 $servername = "localhost";
 $username = "root";
@@ -91,9 +95,9 @@ function fetchTags($qid){
       // output data of each row
       while($row = $result->fetch_assoc()) {
           $tag= $row["tag"];
-          array_push($tags, $tag);
       }
     }
+  $tags = explode(',', $tag);
   return $tags;
 }
 
