@@ -51,7 +51,7 @@
 
     <div class = "container">
         <!--main body starting here-->
-        <p> This tool will help you find the solution to common queries. </p>
+        <p> Calender for common crops </p>
     <form action = "query.php " method = "POST">
     <label for= "location">Enter location</label>
      <br>   <select required class="form-control" name="location" id="location">
@@ -75,9 +75,12 @@
             <option>October</option>
             <option>November</option>
             <option>December</option>
+            <option>ALL</option>
     </select> <br>
     <input type="submit" value="SUBMIT" name="submit" class="btn btn-lg btn-primary btn-block">
     </form>
+
+
 
      <?php     
      $_SESSION['var1']='';
@@ -95,8 +98,11 @@
     {   
         $loc=$_POST['location'];
         $month=$_POST['cause'];
-        //echo $loc;
-        $sql = "SELECT month,".$loc." FROM calender where month = '".$month."'";
+        if(strcmp($month,'ALL')==0){
+            $sql="SELECT month,".$loc." FROM calender";
+        }
+        else{
+        $sql = "SELECT month,".$loc." FROM calender where month = '".$month."'";}
         $result = $conn->query($sql);
         if($result){ 
             if ($result->num_rows > 0) {
@@ -105,11 +111,11 @@
                 while($row = $result->fetch_assoc()) {
                     if(strcmp("North",$loc)==0){
                         echo "<tr><td>".$row['month']."</td><td>".$row['North']."</td></tr>";
-                        $temp = "In the month of ".$row['month'].",the suitable crops are : ".$row['North']; 
+                        
                     }
                     else{
                         echo '<tr><td>'.$row['month'].'</td><td>'.$row['South'].'</td></tr>';
-                        $temp = "In the month of ".$row['month'].",the suitable crops are : ".$row['South']; 
+                        
                     }        
                 }
             } else { echo "Try with different values.";}
@@ -118,7 +124,7 @@
     $conn->close();
     ?>
         </table>
-        <br><br><?php echo $temp; ?><br>
+        <br><br>
 </div>
 </div>
 

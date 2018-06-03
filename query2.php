@@ -102,6 +102,7 @@
             <option>Squash, Winter	</option>
             <option>Tomato	</option>
             <option>Watermelon	</option>
+            <option> ALL </option>
     </select> <br>
     <input type="submit" value="SUBMIT" name="submit" class="btn btn-lg btn-primary btn-block">
     </form>
@@ -123,7 +124,13 @@
     if(isset($_POST['submit']))
     {   
         $cause=$_POST['cause'];
-        $sql = "SELECT plant,inchBwPlants, depthOfSeed FROM vps where plant = '".$cause."'";
+        if(strcmp($cause,"ALL")==0){
+            $sql = "SELECT plant,inchBwPlants, depthOfSeed FROM vps";
+        
+        } else{
+            $sql = "SELECT plant,inchBwPlants, depthOfSeed FROM vps where plant = '".$cause."'";
+            
+        }
         $result = $conn->query($sql);
         if($result){ 
             if ($result->num_rows > 0) {
