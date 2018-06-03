@@ -142,7 +142,8 @@ function translateLang($file,$input){
 		//$myfile = file_put_contents($file, $append.PHP_EOL , FILE_APPEND | LOCK_EX);
 	}
 	else{
-		$append = " ";
+		$str = file_get_contents($file);
+		$append = " ".$str;
 	}
 	$myfile = file_put_contents($file, $append.PHP_EOL , FILE_APPEND | LOCK_EX);
 }

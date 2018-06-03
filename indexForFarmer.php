@@ -69,6 +69,10 @@ function fetchQuestion($sql,$solved){
 
             $temp = makeText($fileName,$farmer_name,$temp,"Question");
           }
+          $temp = $temp . "
+          <button onclick=\"starQid('".$fileName."');\" type=\"button\" class=\"btn btn-md\">
+            STAR
+          </button>";
 
           //attach solution(if any)
           if($solved!=0){
@@ -95,9 +99,9 @@ function fetchTags($qid){
       // output data of each row
       while($row = $result->fetch_assoc()) {
           $tag= $row["tag"];
-          array_push($tags, $tag);
       }
     }
+  $tags = explode(',', $tag);
   return $tags;
 }
 
@@ -458,6 +462,9 @@ $conn->close();
                     <a class="nav-link" href="indexMyQuestions.php">My questions</a>
                 </li>
                 <li class="nav-item">
+                    <a class="nav-link" href="starQuestion.php">Starred questions</a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link" href="php/logout.php">Signout</a>
                 </li>
             </ul>
@@ -498,6 +505,10 @@ $conn->close();
 
             </div>
         </div>
+        <form action="php/star.php" method="POST" id="starForm">
+                  <input style="display: none;" type="text" id="starQid" name="starQid">
+                  <input style="display: none;"  type="text" id="starQid" name="starFid" value="<?php echo $_SESSION['id']; ?>">
+        </form>
     </div>
 
 
@@ -618,15 +629,12 @@ $conn->close();
                 </div>
               </div>
 
-
-
             </div>
             <!-- Modal body END -->
             <!-- Modal footer -->
             <div class="modal-footer">
               <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
             </div>
-            
           </div>
         </div>
       </div>
@@ -634,7 +642,15 @@ $conn->close();
 
 
 
+
+
     <script type="text/javascript">
+
+        function starQid(qid){
+          document.getElementById('starQid').value=qid;
+          document.getElementById("starForm").submit();
+
+        }
         function addQid(qid){
           document.getElementById('audioComment').value=qid;
           document.getElementById('imgComment').value=qid;

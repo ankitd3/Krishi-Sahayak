@@ -1,6 +1,8 @@
 <?php
+include('rake/rake.php');
 
 session_start();
+
 
 if(isset($_SESSION['name'])){
   $name = $_SESSION['name'];
@@ -81,7 +83,8 @@ if(isset($_POST['submit_text'])||isset($_POST['submit_img'])||isset($_POST['subm
 					translateLang($textFileNewName,$var);
 
 					$wordsTags = autoTagging($textFileNewName);
-					updateTag($wordsTags,basename($fileNewName));
+					insertTags($wordsTags);//Insert into tags table
+					updateTag($wordsTags,basename($fileNewName));//Update into q_tag table
 				}
 			}
 		}else{
@@ -95,19 +98,79 @@ if(isset($_POST['submit_text'])||isset($_POST['submit_img'])||isset($_POST['subm
 		$fileNewName = $dir.$fileName;
 		$var = $_POST['text'];
 		$myfile = fopen($fileNewName, "w") or die("Unable to open file!");
-		insertdb($fileName);
 		fwrite($myfile, $var." n6a6m6i6t6a ");
 		fclose($myfile);
 		translateLang($fileNewName,$var);
 
 		$wordsTags = autoTagging($fileNewName);
-		updateTag($wordsTags,$fileName);
+
+		print_r($wordsTags);
+
+		$relatedQ = checkRelatedQuestions($fileName,$wordsTags);
+		
+		if(!empty($relatedQ)){
+			//echo "string";
+			$_SESSION['arrayRelated'] = $relatedQ;
+
+			//print_r($relatedQ);
+			header('Location: arrayRelatedFilter.php');
+
+			insertdb($fileName);
+			updateTag($wordsTags,$fileName);
+
+
+		}
+		else{
+			insertdb($fileName);
+			insertTags($wordsTags);
+			updateTag($wordsTags,$fileName);
+			header('Location: indexForFarmer.php');
+		}
 	}
-	header('Location: indexForFarmer.php');
 }
+
+function checkRelatedQuestions($qid,$tags){
+
+	$l = sizeof($tags);
+
+	if($l>=3){
+		
+		$a = $tags[0];
+		$b = $tags[1];
+		$c = $tags[2];
+
+		$sql = "SELECT * FROM q_tag WHERE (tag LIKE '%".$a."%' AND tag LIKE '%".$b."%' AND tag LIKE '%".$c."%')";
+	}
+	elseif ($l==2) {
+
+		$a = $tags[0];
+		$b = $tags[1];
+		$sql = "SELECT * FROM q_tag WHERE (tag LIKE '%".$a."%' AND tag LIKE '%".$b."%')";
+	}
+
+	$qidArray = array();
+
+	  $result = $GLOBALS['conn']->query($sql);
+	  if ($result->num_rows > 0) {
+	      // output data of each row
+	      while($row = $result->fetch_assoc()) {
+	          $qid =$row["qid"];
+	    	  array_push($qidArray, $qid);
+	      }
+	  }
+
+	 if(!empty($qidArray)){
+	 	return $qidArray;
+	 }
+	 else{
+	 	return 0;
+	 }
+}
+
+
 function translateLang($file,$input){
 	$translate = new TranslateClient([
-	    'key' => ''
+	    'key' => 'AIzaSyCF8Q_I0_0UVYFufryFb4ZghjCzKLU09_Y'
 	]);
 	$lang = $translate->detectLanguage($input);
 	if(strcmp($lang['languageCode'],'en')!=0){
@@ -118,40 +181,62 @@ function translateLang($file,$input){
 		//$myfile = file_put_contents($file, $append.PHP_EOL , FILE_APPEND | LOCK_EX);
 	}
 	else{
-		$append = " ";
+		$str = file_get_contents($file);
+		$append = " ".$str;
 	}
 	$myfile = file_put_contents($file, $append.PHP_EOL , FILE_APPEND | LOCK_EX);
 }
 
 function autoTagging($fullFile){
 	$str = file_get_contents($fullFile);
-	$wordsTags=array();
-	$words = preg_split('/[\s]+/', $str );
-	$lengthWords = count($words);
-	$tags = fetchAllTags();
-	$lengthTags = count($tags);
-	for($x = 0; $x < $lengthWords; $x++) {
-	    for($y = 0; $y < $lengthTags; $y++) {
-	    	if(strcmp(strtolower($words[$x]),strtolower($tags[$y]))==0){
-	    		if(!in_array($tags[$y], $wordsTags, true)){
-	    			array_push($wordsTags,$tags[$y]);
-	    		}
-	    	}
-	    }
-	}
-	//print_r ($wordsTags);
-	return $wordsTags;
+
+	$original = explode("n6a6m6i6t6a", $str);
+
+	$rake = new Rake('rake/stoplist_smart.txt');
+	$phrases = $rake->extract($original[1]);
+	// $wordsTags=array();
+	// $words = preg_split('/[\s]+/', $str );
+	// $lengthWords = count($words);
+	// $tags = fetchAllTags();
+	// $lengthTags = count($tags);
+	// for($x = 0; $x < $lengthWords; $x++) {
+	//     for($y = 0; $y < $lengthTags; $y++) {
+	//     	if(strcmp(strtolower($words[$x]),strtolower($tags[$y]))==0){
+	//     		if(!in_array($tags[$y], $wordsTags, true)){
+	//     			array_push($wordsTags,$tags[$y]);
+	//     		}
+	//     	}
+	//     }
+	// }
+	//print_r ($phrases);
+	$returnArray = array_slice(array_keys($phrases),0,3);
+	//insertTags($returnArray);
+	return $returnArray;
 }
-function updateTag($tags,$qid){
+function insertTags($tags){
 	$l=count($tags);
 	for($x = 0; $x < $l; $x++) {
 
-    	$sql = "INSERT INTO q_tag (tag,qid) VALUES ('".$tags[$x]."','".$qid."')";
+    	$sql = "INSERT INTO tags (tag) VALUES ('".$tags[$x]."')";
 		if ($GLOBALS['conn']->query($sql) === TRUE) {
 		    echo "New record created successfully";
 		} else {
 		    echo "Error: " . $sql . "<br>" . $GLOBALS['conn']->error;
 		}
+	}
+}
+
+function updateTag($tags,$qid){
+	$l=count($tags);
+	$temp = "";
+	for($x = 0; $x < $l; $x++) {
+		$temp = $temp.$tags[$x].",";
+	}
+	$sql = "INSERT INTO q_tag (tag,qid) VALUES ('".$temp."','".$qid."')";
+	if ($GLOBALS['conn']->query($sql) === TRUE) {
+	    echo "New record created successfully";
+	} else {
+	    echo "Error: " . $sql . "<br>" . $GLOBALS['conn']->error;
 	}
 }
 function fetchAllTags(){

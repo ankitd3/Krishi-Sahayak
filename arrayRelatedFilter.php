@@ -5,12 +5,19 @@ session_start();
 if(isset($_SESSION['name'])){
   $name = $_SESSION['name'];
   $id = $_SESSION['id'];
+  $arrayQ = $_SESSION['arrayRelated'];
 }
 else{
   header('Location: login.html');
 }
 
-$tag = $_GET['tag'];
+$tempQ = "";
+
+foreach ($arrayQ as $value) {
+    $tempQ = $tempQ ."'".$value."',";
+}
+
+$tempQ = substr($tempQ, 0, -1);
 
 $servername = "localhost";
 $username = "root";
@@ -23,8 +30,8 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 //$sqlSolved = "SELECT qid,sid FROM qs WHERE qid in (select qid from q where q\.solved = 1)";
-$sqlSolved = "SELECT * FROM q WHERE (solved = 1) AND qid IN (SELECT qid FROM q_tag WHERE tag LIKE '%".$tag."%')";
-$sqlUnsolved = "SELECT * FROM q WHERE (solved = 0) AND qid IN (SELECT qid FROM q_tag WHERE tag LIKE '%".$tag."%')";
+$sqlSolved = "SELECT * FROM q WHERE (solved = 1) AND qid IN (".$tempQ.")";
+$sqlUnsolved = "SELECT * FROM q WHERE (solved = 0) AND qid IN (".$tempQ.")";
 
 $allowedAudio = array('mp3','ogg'); //accepted file types
 $allowedImage = array('jpeg','jpg','png'); //accepted file types
@@ -475,6 +482,9 @@ $conn->close();
 
     <div class="container">
 
+      <div class="alert alert-success">
+        Please refer to the Questions below! If they are similar to yours <strong>STAR</strong> them or <a href="uploadques.html" class="alert-link">click here</a> to post it anyway!
+      </div>
         <!--defining tab headings-->
         <ul class="nav nav-tabs" id="myTab" role="tablist">
             <li class="nav-item">
