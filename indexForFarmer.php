@@ -73,15 +73,15 @@ function fetchQuestion($sql,$solved){
           <button onclick=\"starQid('".$fileName."');\" type=\"button\" class=\"btn btn-md\">
             STAR
           </button>";
+          $temp = $temp . "
+          <button onclick=\"addQid('".$fileName."');\" type=\"button\" class=\"btn btn-md\" data-toggle=\"modal\" data-target=\"#myModal\">
+            Post Comment
+          </button>";
 
           //attach solution(if any)
           if($solved!=0){
             $temp = fetchSolution($fileName,$temp);
           }
-          $temp = $temp . "
-          <button onclick=\"addQid('".$fileName."');\" type=\"button\" class=\"btn btn-md\" data-toggle=\"modal\" data-target=\"#myModal\">
-            Post Comment
-          </button>";
           //Attach comments(if any)
           $temp = fetchComments($fileName,$temp);//check if there are any comments for the qid, returns an array with the filenames of comments to be included.
       }
@@ -100,20 +100,21 @@ function fetchTags($qid){
       while($row = $result->fetch_assoc()) {
           $tag= $row["tag"];
       }
+      $tags = explode(',', $tag);
+      return $tags;
     }
-  $tags = explode(',', $tag);
-  return $tags;
+    return "";
 }
 
 function attachTags($tags,$temp){
-
+  if(!empty($tags)){
     $length = count($tags);
 
     for($x = 0; $x < $length; $x++) {
       $temp = $temp . "<a href='filterQoneTag.php?tag=".$tags[$x]."' class=\"badge badge-light\">".$tags[$x]."</a>";
     }
-
-    return $temp;
+  }
+  return $temp;
 }
 
 function fetchComments($qid,$temp){
@@ -254,7 +255,7 @@ function makeAudio($fileName,$userId,$temp,$dir){
   }
   elseif (strcmp($dir, "Solution")==0) {
       $temp = $temp."
-        <div class=\"card border-light audioans\">
+        <div class=\"card border-light\">
           <div class=\"card-body\">
               <h6> @".$userId."</h6>
             <p class=\"card-text\">
@@ -302,7 +303,7 @@ function makeImage($fileName,$userId,$temp,$dir){
 
   elseif (strcmp($dir, "Solution")==0) {
     $temp = $temp."
-      <div class=\"card border-light imgques\">
+      <div class=\"card border-light\">
           <div class=\"card-body\">
               <h6> @".$userId."</h6>
             <center>
@@ -369,7 +370,7 @@ function makeText($fileName,$userId,$temp,$dir){
   return $temp;
   }
   elseif (strcmp($dir, "Solution")==0) {
-    $temp = $temp . "<div id=\"".$originalId."\" class=\"card border-light textans\">
+    $temp = $temp . "<div id=\"".$originalId."\" class=\"card border-light\">
                         <div class=\"card-body\">
                             <h6> @".$userId."</h6>
                         <p class=\"card-text\">".$original[0]."</p>
@@ -380,7 +381,7 @@ function makeText($fileName,$userId,$temp,$dir){
       $temp = $temp . "</div>
                     </div>";
 
-    $temp = $temp . "<div id=\"".$translatedId."\" style=\"display: none;\" class=\"card border-light textans\">
+    $temp = $temp . "<div id=\"".$translatedId."\" style=\"display: none;\" class=\"card border-light\">
                         <div class=\"card-body\">
                             <h6> @".$userId."</h6>
                         <p class=\"card-text\">".$original[1]."</p>

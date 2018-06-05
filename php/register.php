@@ -24,7 +24,7 @@ if(isset($_POST['submit_form'])){
 		$sql = "INSERT INTO farmer (phno,name,password) VALUES ('".$phone."','".$name."','".$pass."')";
 
 		if ($conn->query($sql) === TRUE) {
-		    header('Location: ../login.html');
+		    header('Location: ../login.php');
 		} else {
 		    echo "Error: " . $sql . "<br>" . $GLOBALS['conn']->error;
 		}
@@ -38,7 +38,7 @@ if(isset($_POST['submit_form'])){
 			$sql = "INSERT INTO expert (phno,name,password) VALUES ('".$phone."','".$name."','".$pass."')";
 
 			if ($conn->query($sql) === TRUE) {
-			    header('Location: ../login.html');
+			    header('Location: ../login.php');
 			} else {
 			    echo "Error: " . $sql . "<br>" . $GLOBALS['conn']->error;
 			}

@@ -47,6 +47,7 @@ if(isset($_POST['submit_text'])||isset($_POST['submit_img'])||isset($_POST['subm
 				$var="<audio controls>
 					<source src='".$path."' type='audio/mpeg'>
 				</audio>";  //displays the audio file in html
+				header('Location: indexForFarmer.php');
 			}
 		}else{
 			$var="Incompatible File type";
@@ -86,6 +87,7 @@ if(isset($_POST['submit_text'])||isset($_POST['submit_img'])||isset($_POST['subm
 					insertTags($wordsTags);//Insert into tags table
 					updateTag($wordsTags,basename($fileNewName));//Update into q_tag table
 				}
+				header('Location: indexForFarmer.php');
 			}
 		}else{
 			$var="Incompatible File type";
@@ -154,7 +156,7 @@ function checkRelatedQuestions($qid1,$tags){
 		  }
 
 	}
-	elseif ($l==2) {
+	if($l==2) {
 
 		$a = $tags[0];
 		$b = $tags[1];
@@ -173,7 +175,7 @@ function checkRelatedQuestions($qid1,$tags){
 		  	return $qidArray;
 		  }
 	}
-	elseif ($l==1) {
+	if ($l==1) {
 
 		$a = $tags[0];
 		$sql = "SELECT * FROM q_tag WHERE (tag LIKE '%".$a."%')";

@@ -100,20 +100,21 @@ function fetchTags($qid){
       while($row = $result->fetch_assoc()) {
           $tag= $row["tag"];
       }
+      $tags = explode(',', $tag);
+      return $tags;
     }
-  $tags = explode(',', $tag);
-  return $tags;
+    return "";
 }
 
 function attachTags($tags,$temp){
-
+ if(!empty($tags)){
     $length = count($tags);
 
     for($x = 0; $x < $length; $x++) {
       $temp = $temp . "<a href='filterQoneTag.php?tag=".$tags[$x]."' class=\"badge badge-light\">".$tags[$x]."</a>";
     }
-
-    return $temp;
+  }
+  return $temp;
 }
 
 function fetchComments($qid,$temp){

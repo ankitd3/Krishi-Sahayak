@@ -96,20 +96,21 @@ function fetchTags($qid){
       while($row = $result->fetch_assoc()) {
           $tag= $row["tag"];
       }
+      $tags = explode(',', $tag);
+      return $tags;
     }
-  $tags = explode(',', $tag);
-  return $tags;
+    return "";
 }
 
 function attachTags($tags,$temp){
-
+ if(!empty($tags)){
     $length = count($tags);
 
     for($x = 0; $x < $length; $x++) {
       $temp = $temp . "<a href='filterQoneTag.php?tag=".$tags[$x]."' class=\"badge badge-light\">".$tags[$x]."</a>";
     }
-
-    return $temp;
+  }
+  return $temp;
 }
 
 function fetchComments($qid,$temp){
@@ -250,7 +251,7 @@ function makeAudio($fileName,$userId,$temp,$dir){
   }
   elseif (strcmp($dir, "Solution")==0) {
       $temp = $temp."
-        <div class=\"card border-light audioans\">
+        <div class=\"card border-light\">
           <div class=\"card-body\">
               <h6> @".$userId."</h6>
             <p class=\"card-text\">
@@ -298,7 +299,7 @@ function makeImage($fileName,$userId,$temp,$dir){
 
   elseif (strcmp($dir, "Solution")==0) {
     $temp = $temp."
-      <div class=\"card border-light imgques\">
+      <div class=\"card border-light\">
           <div class=\"card-body\">
               <h6> @".$userId."</h6>
             <center>

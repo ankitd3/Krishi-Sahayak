@@ -100,20 +100,21 @@ function fetchTags($qid){
       while($row = $result->fetch_assoc()) {
           $tag= $row["tag"];
       }
+      $tags = explode(',', $tag);
+      return $tags;
     }
-  $tags = explode(',', $tag);
-  return $tags;
+    return "";
 }
 
 function attachTags($tags,$temp){
-
+if(!empty($tags)){
     $length = count($tags);
 
     for($x = 0; $x < $length; $x++) {
-      $temp = $temp . "<a href='filterQoneTagForExpert.php?tag=".$tags[$x]."' class=\"badge badge-light\">".$tags[$x]."</a>";
+      $temp = $temp . "<a href='filterQoneTag.php?tag=".$tags[$x]."' class=\"badge badge-light\">".$tags[$x]."</a>";
     }
-
-    return $temp;
+  }
+  return $temp;
 }
 
 function fetchComments($qid,$temp){
@@ -254,7 +255,7 @@ function makeAudio($fileName,$userId,$temp,$dir){
   }
   elseif (strcmp($dir, "Solution")==0) {
       $temp = $temp."
-        <div class=\"card border-light audioans\">
+        <div class=\"card border-light\">
           <div class=\"card-body\">
               <h6> @".$userId."</h6>
             <p class=\"card-text\">
@@ -370,7 +371,7 @@ function makeText($fileName,$userId,$temp,$dir){
   return $temp;
   }
   elseif (strcmp($dir, "Solution")==0) {
-    $temp = $temp . "<div id=\"".$originalId."\" class=\"card border-light textans\">
+    $temp = $temp . "<div id=\"".$originalId."\" class=\"card border-light\">
                         <div class=\"card-body\">
                             <h6> @".$userId."</h6>
                         <p class=\"card-text\">".$original[0]."</p>
@@ -381,7 +382,7 @@ function makeText($fileName,$userId,$temp,$dir){
       $temp = $temp . "</div>
                     </div>";
 
-    $temp = $temp . "<div id=\"".$translatedId."\" style=\"display: none;\" class=\"card border-light textans\">
+    $temp = $temp . "<div id=\"".$translatedId."\" style=\"display: none;\" class=\"card border-light\">
                         <div class=\"card-body\">
                             <h6> @".$userId."</h6>
                         <p class=\"card-text\">".$original[1]."</p>

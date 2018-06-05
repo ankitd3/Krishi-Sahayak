@@ -78,20 +78,19 @@ function fetchQuestion($sql,$solved){
 
             $temp = makeText($fileName,$farmer_name,$temp,"Question");
           }
-
           $temp = $temp . "
           <button onclick=\"starQid('".$fileName."');\" type=\"button\" class=\"btn btn-md\">
             STAR
+          </button>";
+          $temp = $temp . "
+          <button onclick=\"addQid('".$fileName."');\" type=\"button\" class=\"btn btn-md\" data-toggle=\"modal\" data-target=\"#myModal\">
+            Post Comment
           </button>";
 
           //attach solution(if any)
           if($solved!=0){
             $temp = fetchSolution($fileName,$temp);
           }
-          $temp = $temp . "
-          <button onclick=\"addQid('".$fileName."');\" type=\"button\" class=\"btn btn-md\" data-toggle=\"modal\" data-target=\"#myModal\">
-            Post Comment
-          </button>";
           //Attach comments(if any)
           $temp = fetchComments($fileName,$temp);//check if there are any comments for the qid, returns an array with the filenames of comments to be included.
       }
@@ -110,20 +109,21 @@ function fetchTags($qid){
       while($row = $result->fetch_assoc()) {
           $tag= $row["tag"];
       }
+      $tags = explode(',', $tag);
+      return $tags;
     }
-  $tags = explode(',', $tag);
-  return $tags;
+    return "";
 }
 
 function attachTags($tags,$temp){
-
+ if(!empty($tags)){
     $length = count($tags);
 
     for($x = 0; $x < $length; $x++) {
       $temp = $temp . "<a href='filterQoneTag.php?tag=".$tags[$x]."' class=\"badge badge-light\">".$tags[$x]."</a>";
     }
-
-    return $temp;
+  }
+  return $temp;
 }
 
 function fetchComments($qid,$temp){
@@ -351,7 +351,6 @@ function makeText($fileName,$userId,$temp,$dir){
   if(strcmp($dir, "Question")==0){
 
     $tags = fetchTags($fileName);
-
 
     $temp = $temp . "<div id=\"".$originalId."\" class=\"card border-light textques\">
                         <div class=\"card-body\">
