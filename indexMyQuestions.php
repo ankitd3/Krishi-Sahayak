@@ -439,7 +439,7 @@ $conn->close();
 
 <body>
 <nav class="navbar navbar-expand-md">
-        <a href="#" style="color: #FAFEF9" class="navbar-brand"> Q/A App for farmers </a>
+        <a href="#" style="color: #FAFEF9" class="navbar-brand">Q/A</a>
         <div id="google_translate_element"></div>
         <button type="button" data-target="#menu" data-toggle="collapse" aria-controls="menu" aria-expanded="false" aria-label="toggle navigation"
             class="navbar-toggler navbar-dark">
@@ -456,6 +456,9 @@ $conn->close();
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="indexMyQuestions.php">My questions</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="starQuestion.php">Starred questions</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="php/logout.php">Signout</a>

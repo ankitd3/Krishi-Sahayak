@@ -337,9 +337,10 @@ function makeText($fileName,$userId,$temp,$dir){
   $originalId = $fileName.'original';
   $translatedId = $fileName.'translated';
 
-  $tags = fetchTags($fileName);
 
   if(strcmp($dir, "Question")==0){
+
+    $tags = fetchTags($fileName);
 
     $temp = $temp . "<div id=\"".$originalId."\" class=\"card border-light textques\">
                         <div class=\"card-body\">
@@ -374,7 +375,7 @@ function makeText($fileName,$userId,$temp,$dir){
                         <p class=\"card-text\">".$original[0]."</p>
                         ";
 
-    $temp = attachTags($tags,$temp);
+    //$temp = attachTags($tags,$temp);
 
       $temp = $temp . "</div>
                     </div>";
@@ -385,7 +386,7 @@ function makeText($fileName,$userId,$temp,$dir){
                         <p class=\"card-text\">".$original[1]."</p>
                         ";
 
-    $temp = attachTags($tags,$temp);
+    //$temp = attachTags($tags,$temp);
 
       $temp = $temp . "</div>
                     </div>";
@@ -400,7 +401,7 @@ function makeText($fileName,$userId,$temp,$dir){
                         <p class=\"card-text\">".$original[0]."</p>
                         </div>";
 
-    $temp = attachTags($tags,$temp);
+    //$temp = attachTags($tags,$temp);
 
     $temp = $temp . "</div>";
 
@@ -410,7 +411,7 @@ function makeText($fileName,$userId,$temp,$dir){
                         <p class=\"card-text\">".$original[1]."</p>
                         </div>";
 
-    $temp = attachTags($tags,$temp);
+    //$temp = attachTags($tags,$temp);
 
     $temp = $temp . "</div>";
 
@@ -443,7 +444,7 @@ $conn->close();
 
 <body>
 <nav class="navbar navbar-expand-md">
-        <a href="#" style="color: #FAFEF9" class="navbar-brand"> Q/A App for farmers </a>
+        <a href="#" style="color: #FAFEF9" class="navbar-brand"> Q/A </a>
         <div id="google_translate_element"></div>
         <button type="button" data-target="#menu" data-toggle="collapse" aria-controls="menu" aria-expanded="false" aria-label="toggle navigation"
             class="navbar-toggler navbar-dark">
@@ -519,7 +520,7 @@ $conn->close();
           
             <!-- Modal Header -->
             <div class="modal-header">
-              <h4 class="modal-title">Modal Heading</h4>
+              <h4 class="modal-title">Post Comment</h4>
               <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
             
@@ -544,7 +545,7 @@ $conn->close();
               <div class="tab-content" id="myTabContent">
                 <div class="tab-pane fade show active" id="home1" role="tabpanel" aria-labelledby="home-tab">
                     <br>
-                    <form action = "Comments.php" enctype="multipart/form-data" method="POST">
+                    <form action = "comments.php" enctype="multipart/form-data" method="POST">
 
                         <div class="form-group">
                             
@@ -559,7 +560,7 @@ $conn->close();
                 </div>
                 <div class="tab-pane fade" id="profile1" role="tabpanel" aria-labelledby="profile1-tab">
 
-                    <form action="Comments.php" enctype="multipart/form-data" method="POST">
+                    <form action="comments.php" enctype="multipart/form-data" method="POST">
 
                         <div class="form-group">
                             <br>
@@ -597,7 +598,7 @@ $conn->close();
                 </div>
                 <div class="tab-pane fade" id="text1" role="tabpanel" aria-labelledby="text1-tab">
 
-                        <form action="Comments.php" enctype="multipart/form-data" method="POST">
+                        <form action="comments.php" enctype="multipart/form-data" method="POST">
 
                           <input style="display: none;" type="text" id="textComment" name="qid">
                             
@@ -640,7 +641,48 @@ $conn->close();
       </div>
 
 
+<script type="text/javascript">
 
+        var lang;
+
+        function changeLanguage (l){
+            var x = document.getElementById(l);
+            lang = x.value;
+        }
+
+        function start (id) {
+
+            var r = document.getElementById(id);
+
+            if('webkitSpeechRecognition' in window){
+                var speechRecognizer = new webkitSpeechRecognition();
+                speechRecognizer.continuous = true;
+                speechRecognizer.interimResults = true;
+                speechRecognizer.lang = lang;
+                speechRecognizer.start();
+
+                var finalTranscripts = '';
+
+                speechRecognizer.onresult = function(event){
+                    var interimTranscripts = '';
+                    for(var i = event.resultIndex; i < event.results.length; i++){
+                        var transcript = event.results[i][0].transcript;
+                        transcript.replace("\n", "<br>");
+                        if(event.results[i].isFinal){
+                            finalTranscripts += transcript;
+                        }else{
+                            interimTranscripts += transcript;
+                        }
+                    }
+                    r.innerHTML = finalTranscripts + interimTranscripts;
+                };
+                speechRecognizer.onerror = function (event) {
+                };
+            }else{
+                r.innerHTML = 'Your browser is not supported. If google chrome, please upgrade!';
+            }
+        }
+</script>
 
 
 

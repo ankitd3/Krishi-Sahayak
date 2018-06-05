@@ -104,7 +104,7 @@ if(isset($_POST['submit_text'])||isset($_POST['submit_img'])||isset($_POST['subm
 
 		$wordsTags = autoTagging($fileNewName);
 
-		print_r($wordsTags);
+		//print_r($wordsTags);
 
 		$relatedQ = checkRelatedQuestions($fileName,$wordsTags);
 		
@@ -115,18 +115,17 @@ if(isset($_POST['submit_text'])||isset($_POST['submit_img'])||isset($_POST['subm
 			//print_r($relatedQ);
 			header('Location: arrayRelatedFilter.php');
 
-			insertdb($fileName);
-			updateTag($wordsTags,$fileName);
-
+			//insertdb($fileName);
+			//updateTag($wordsTags,$fileName);
 
 		}
 		else{
 			insertdb($fileName);
 			insertTags($wordsTags);
 			updateTag($wordsTags,$fileName);
-			header('Location: indexForFarmer.php');
 		}
 	}
+	header('Location: indexForFarmer.php');
 }
 
 function checkRelatedQuestions($qid,$tags){
@@ -138,14 +137,18 @@ function checkRelatedQuestions($qid,$tags){
 		$a = $tags[0];
 		$b = $tags[1];
 		$c = $tags[2];
-
-		$sql = "SELECT * FROM q_tag WHERE (tag LIKE '%".$a."%' AND tag LIKE '%".$b."%' AND tag LIKE '%".$c."%')";
+		$sql = "SELECT * FROM q_tag WHERE (tag LIKE '%".$a."%' OR tag LIKE '%".$b."%' OR tag LIKE '%".$c."%')";
 	}
 	elseif ($l==2) {
 
 		$a = $tags[0];
 		$b = $tags[1];
-		$sql = "SELECT * FROM q_tag WHERE (tag LIKE '%".$a."%' AND tag LIKE '%".$b."%')";
+		$sql = "SELECT * FROM q_tag WHERE (tag LIKE '%".$a."%' OR tag LIKE '%".$b."%')";
+	}
+	elseif ($l==1) {
+
+		$a = $tags[0];
+		$sql = "SELECT * FROM q_tag WHERE (tag LIKE '%".$a."%')";
 	}
 
 	$qidArray = array();

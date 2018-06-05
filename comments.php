@@ -1,4 +1,5 @@
 <?php
+//include('rake/rake.php');
 
 session_start();
 
@@ -8,7 +9,7 @@ if(isset($_SESSION['name'])){
   $type = $_SESSION['type'];
 }
 else{
-  header('Location: login.html');
+  header('Location: login.php');
 }
 
 require __DIR__ . '/vendor/autoload.php';
@@ -82,9 +83,13 @@ if(isset($_POST['submit_text'])||isset($_POST['submit_img'])||isset($_POST['subm
 				$var = $_POST['text_file'];
 				$myfile = fopen($textFileNewName, "w") or die("Unable to open file!");
 				insertImgText($textFileName,basename($fileNewName));
-				fwrite($myfile, $var);
+				fwrite($myfile, $var." n6a6m6i6t6a ");
 				fclose($myfile);
 				translateLang($textFileNewName,$var);
+
+				// $wordsTags = autoTagging($textFileNewName);
+				// insertTags($wordsTags);//Insert into tags table
+				// updateTag($wordsTags,basename($fileNewName));//Update into q_tag table
 			}
 		}
 	elseif (!empty($_POST['text'])) {
@@ -93,22 +98,84 @@ if(isset($_POST['submit_text'])||isset($_POST['submit_img'])||isset($_POST['subm
 		$fileNewName = $dir.$fileName;
 		$var = $_POST['text'];
 		$myfile = fopen($fileNewName, "w") or die("Unable to open file!");
-		insertdb($fileName);
-		fwrite($myfile, $var);
+		fwrite($myfile, $var." n6a6m6i6t6a ");
 		fclose($myfile);
 		translateLang($fileNewName,$var);
+
+		// $wordsTags = autoTagging($fileNewName);
+		insertdb($fileName);
+		// insertTags($wordsTags);
+		// updateTag($wordsTags,$fileName);
+
 	}
-	if(strcmp($type,"expert")==0){
-		header('Location: indexForExpert.php');
-	}
-	else(strcmp($type,"farmer")==0){
-		header('Location: indexForFarmer.php');
-	}
+	header('Location: login.php');
+
 }
+
+// function insertTags($tags){
+// 	$servername = "localhost";
+// 	$username = "root";
+// 	$password = "";
+// 	$dbname = "ks";
+
+// 	// Create connection
+// 	$conn = new mysqli($servername, $username, $password, $dbname);
+// 	// Check connection
+// 	if ($conn->connect_error) {
+// 	    die("Connection failed: " . $conn->connect_error);
+// 	} 
+
+// 	$l=count($tags);
+// 	for($x = 0; $x < $l; $x++) {
+
+//     	$sql = "INSERT INTO tags (tag) VALUES ('".$tags[$x]."')";
+// 		if ($conn->query($sql) === TRUE) {
+// 		    echo "New record created successfully";
+// 		} else {
+// 		    echo "Error: " . $sql . "<br>" . $GLOBALS['conn']->error;
+// 		}
+// 	}
+// }
+
+// function updateTag($tags,$qid){
+// 	$servername = "localhost";
+// 	$username = "root";
+// 	$password = "";
+// 	$dbname = "ks";
+
+// 	// Create connection
+// 	$conn = new mysqli($servername, $username, $password, $dbname);
+// 	// Check connection
+// 	if ($conn->connect_error) {
+// 	    die("Connection failed: " . $conn->connect_error);
+// 	} 
+// 	$l=count($tags);
+// 	$temp = "";
+// 	for($x = 0; $x < $l; $x++) {
+// 		$temp = $temp.$tags[$x].",";
+// 	}
+// 	$sql = "INSERT INTO q_tag (tag,qid) VALUES ('".$temp."','".$qid."')";
+// 	if ($conn->query($sql) === TRUE) {
+// 	    echo "New record created successfully";
+// 	} else {
+// 	    echo "Error: " . $sql . "<br>" . $GLOBALS['conn']->error;
+// 	}
+// }
+
+// function autoTagging($fullFile){
+// 	$str = file_get_contents($fullFile);
+
+// 	$original = explode("n6a6m6i6t6a", $str);
+
+// 	$rake = new Rake('rake/stoplist_smart.txt');
+// 	$phrases = $rake->extract($original[1]);
+// 	$returnArray = array_slice(array_keys($phrases),0,3);
+// 	return $returnArray;
+// }
 
 function translateLang($file,$input){
 	$translate = new TranslateClient([
-	    'key' => ''
+	    'key' => 'AIzaSyCF8Q_I0_0UVYFufryFb4ZghjCzKLU09_Y'
 	]);
 	$lang = $translate->detectLanguage($input);
 	if(strcmp($lang['languageCode'],'en')!=0){
@@ -169,7 +236,7 @@ function insertdb($comment){
 	$sql = "INSERT INTO comments (qid,cid,user) VALUES ('".$qid."','".$comment."','".$GLOBALS['name']."')";
 
 	if ($conn->query($sql) === TRUE) {
-	    echo "New record created successfully";
+		echo "New record created successfully";
 	} else {
 	    echo "Error: " . $sql . "<br>" . $conn->error;
 	}

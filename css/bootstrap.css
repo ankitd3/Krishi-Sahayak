@@ -1,6 +1,6 @@
 nav{
     font-family: 'Roboto', sans-serif;
-    background-color: #2b5e40;
+    background-color: #1e2c24;
     color: #FAFEF9;
     font-weight: 400px;
 
@@ -8,7 +8,7 @@ nav{
 
 body{
     background-color: #FAFEF9;
-    color: #2b5e40;
+    color: #1e2c24;
 }
 
 a.nav-link{
@@ -27,6 +27,6 @@ a.nav-link:hover{
 }
 
 .btn{
-    background-color: #2b5e40;
+    background-color: #1e2c24;
     color: #FAFEF9;
 }

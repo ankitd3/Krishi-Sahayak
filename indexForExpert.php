@@ -337,9 +337,11 @@ function makeText($fileName,$userId,$temp,$dir){
   $originalId = $fileName.'original';
   $translatedId = $fileName.'translated';
 
-  $tags = fetchTags($fileName);
 
   if(strcmp($dir, "Question")==0){
+
+  $tags = fetchTags($fileName);
+
 
     $temp = $temp . "<div id=\"".$originalId."\" class=\"card border-light textques\">
                         <div class=\"card-body\">
@@ -374,7 +376,7 @@ function makeText($fileName,$userId,$temp,$dir){
                         <p class=\"card-text\">".$original[0]."</p>
                         ";
 
-    $temp = attachTags($tags,$temp);
+    //$temp = attachTags($tags,$temp);
 
       $temp = $temp . "</div>
                     </div>";
@@ -385,7 +387,7 @@ function makeText($fileName,$userId,$temp,$dir){
                         <p class=\"card-text\">".$original[1]."</p>
                         ";
 
-    $temp = attachTags($tags,$temp);
+    //$temp = attachTags($tags,$temp);
 
       $temp = $temp . "</div>
                     </div>";
@@ -400,7 +402,7 @@ function makeText($fileName,$userId,$temp,$dir){
                         <p class=\"card-text\">".$original[0]."</p>
                         </div>";
 
-    $temp = attachTags($tags,$temp);
+    //$temp = attachTags($tags,$temp);
 
     $temp = $temp . "</div>";
 
@@ -410,7 +412,7 @@ function makeText($fileName,$userId,$temp,$dir){
                         <p class=\"card-text\">".$original[1]."</p>
                         </div>";
 
-    $temp = attachTags($tags,$temp);
+    //$temp = attachTags($tags,$temp);
 
     $temp = $temp . "</div>";
 
@@ -443,7 +445,7 @@ $conn->close();
 
 <body>
 <nav class="navbar navbar-expand-md">
-        <a href="#" style="color: #FAFEF9" class="navbar-brand"> Q/A App for farmers </a>
+        <a href="#" style="color: #FAFEF9" class="navbar-brand"> Q/A </a>
         <div id="google_translate_element"></div>
         <button type="button" data-target="#menu" data-toggle="collapse" aria-controls="menu" aria-expanded="false" aria-label="toggle navigation"
             class="navbar-toggler navbar-dark">

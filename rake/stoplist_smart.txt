@@ -154,6 +154,7 @@ example
 except
 f
 far
+farmer
 few
 fifth
 first
@@ -182,6 +183,7 @@ gone
 got
 gotten
 greetings
+grow
 h
 had
 hadn't
@@ -270,6 +272,7 @@ like
 liked
 likely
 little
+live
 look
 looking
 looks
@@ -356,6 +359,7 @@ perhaps
 placed
 please
 plus
+poor
 possible
 presumably
 probably
@@ -374,6 +378,7 @@ regarding
 regardless
 regards
 relatively
+required
 respectively
 right
 s
@@ -424,6 +429,7 @@ specifying
 still
 sub
 such
+suitable
 sup
 sure
 t

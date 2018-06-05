@@ -9,7 +9,7 @@ if(isset($_SESSION['name'])){
 
 }
 else{
-  header('Location: login.html');
+  header('Location: login.php');
 }
 
 $servername = "localhost";
@@ -442,7 +442,7 @@ $conn->close();
 
 <body>
 <nav class="navbar navbar-expand-md">
-        <a href="#" style="color: #FAFEF9" class="navbar-brand"> Q/A App for farmers </a>
+        <a href="#" style="color: #FAFEF9" class="navbar-brand"> Q/A</a>
         <div id="google_translate_element"></div>
         <button type="button" data-target="#menu" data-toggle="collapse" aria-controls="menu" aria-expanded="false" aria-label="toggle navigation"
             class="navbar-toggler navbar-dark">

@@ -7,7 +7,7 @@ if(isset($_SESSION['name'])){
   $fid = $_SESSION['id'];
 }
 else{
-  header('Location: login.html');
+  header('Location: ../login.html');
 }
 
 $qid = $_POST['starQid'];
@@ -28,5 +28,5 @@ if ($conn->connect_error) {
     } else {
         echo "Error: " . $sql . "<br>" . $GLOBALS['conn']->error;
     }
-
+header('Location: ../starQuestion.php');
 ?>

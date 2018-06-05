@@ -8,7 +8,7 @@
 
 .icon {
   padding: 10px;
-  background-color: #2b5e40;
+  background-color: #1e2c24;
   color: white;
   min-width: 50px;
   text-align: center;
@@ -21,11 +21,11 @@
 }
 
 .input-field:focus {
-  border: 2px solid #2b5e40;
+  border: 2px solid #1e2c24;
 }
 
 .btn {
-  background-color: #2b5e40;
+  background-color: #1e2c24;
   color: #fafef9;
   padding: 15px 20px;
   border: none;

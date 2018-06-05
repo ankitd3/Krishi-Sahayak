@@ -127,7 +127,7 @@ if(isset($_POST['submit_text'])||isset($_POST['submit_img'])||isset($_POST['subm
 function translateLang($file,$input){
 
 	$translate = new TranslateClient([
-	    'key' => ''
+	    'key' => 'AIzaSyCF8Q_I0_0UVYFufryFb4ZghjCzKLU09_Y'
 	]);
 
 	$lang = $translate->detectLanguage($input);
