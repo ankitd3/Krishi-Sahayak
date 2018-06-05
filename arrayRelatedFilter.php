@@ -8,7 +8,7 @@ if(isset($_SESSION['name'])){
   $arrayQ = $_SESSION['arrayRelated'];
 }
 else{
-  header('Location: login.html');
+  header('Location: login.php');
 }
 
 $tempQ = "";
@@ -78,6 +78,11 @@ function fetchQuestion($sql,$solved){
 
             $temp = makeText($fileName,$farmer_name,$temp,"Question");
           }
+
+          $temp = $temp . "
+          <button onclick=\"starQid('".$fileName."');\" type=\"button\" class=\"btn btn-md\">
+            STAR
+          </button>";
 
           //attach solution(if any)
           if($solved!=0){
@@ -342,9 +347,11 @@ function makeText($fileName,$userId,$temp,$dir){
   $originalId = $fileName.'original';
   $translatedId = $fileName.'translated';
 
-  $tags = fetchTags($fileName);
 
   if(strcmp($dir, "Question")==0){
+
+    $tags = fetchTags($fileName);
+
 
     $temp = $temp . "<div id=\"".$originalId."\" class=\"card border-light textques\">
                         <div class=\"card-body\">
@@ -379,7 +386,7 @@ function makeText($fileName,$userId,$temp,$dir){
                         <p class=\"card-text\">".$original[0]."</p>
                         ";
 
-    $temp = attachTags($tags,$temp);
+    //$temp = attachTags($tags,$temp);
 
       $temp = $temp . "</div>
                     </div>";
@@ -390,7 +397,7 @@ function makeText($fileName,$userId,$temp,$dir){
                         <p class=\"card-text\">".$original[1]."</p>
                         ";
 
-    $temp = attachTags($tags,$temp);
+    //$temp = attachTags($tags,$temp);
 
       $temp = $temp . "</div>
                     </div>";
@@ -405,7 +412,7 @@ function makeText($fileName,$userId,$temp,$dir){
                         <p class=\"card-text\">".$original[0]."</p>
                         </div>";
 
-    $temp = attachTags($tags,$temp);
+    //$temp = attachTags($tags,$temp);
 
     $temp = $temp . "</div>";
 
@@ -415,7 +422,7 @@ function makeText($fileName,$userId,$temp,$dir){
                         <p class=\"card-text\">".$original[1]."</p>
                         </div>";
 
-    $temp = attachTags($tags,$temp);
+    //$temp = attachTags($tags,$temp);
 
     $temp = $temp . "</div>";
 
@@ -513,6 +520,10 @@ $conn->close();
 
             </div>
         </div>
+        <form action="php/star.php" method="POST" id="starForm">
+                  <input style="display: none;" type="text" id="starQid" name="starQid">
+                  <input style="display: none;"  type="text" id="starQid" name="starFid" value="<?php echo $_SESSION['id']; ?>">
+        </form>
     </div>
 
 
@@ -650,6 +661,11 @@ $conn->close();
 
 
     <script type="text/javascript">
+      function starQid(qid){
+          document.getElementById('starQid').value=qid;
+          document.getElementById("starForm").submit();
+
+        }
         function addQid(qid){
           document.getElementById('audioComment').value=qid;
           document.getElementById('imgComment').value=qid;

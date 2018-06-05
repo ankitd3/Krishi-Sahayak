@@ -109,7 +109,7 @@ function attachTags($tags,$temp){
     $length = count($tags);
 
     for($x = 0; $x < $length; $x++) {
-      $temp = $temp . "<a href='filterQoneTag.php?tag=".$tags[$x]."' class=\"badge badge-light\">".$tags[$x]."</a>";
+      $temp = $temp . "<a href='filterQoneTagForExpert.php?tag=".$tags[$x]."' class=\"badge badge-light\">".$tags[$x]."</a>";
     }
 
     return $temp;
@@ -336,9 +336,11 @@ function makeText($fileName,$userId,$temp,$dir){
   $originalId = $fileName.'original';
   $translatedId = $fileName.'translated';
 
-  $tags = fetchTags($fileName);
 
   if(strcmp($dir, "Question")==0){
+
+      $tags = fetchTags($fileName);
+
 
     $temp = $temp . "<div id=\"".$originalId."\" class=\"card border-light textques\">
                         <div class=\"card-body\">
@@ -373,7 +375,7 @@ function makeText($fileName,$userId,$temp,$dir){
                         <p class=\"card-text\">".$original[0]."</p>
                         ";
 
-    $temp = attachTags($tags,$temp);
+    //$temp = attachTags($tags,$temp);
 
       $temp = $temp . "</div>
                     </div>";
@@ -384,7 +386,7 @@ function makeText($fileName,$userId,$temp,$dir){
                         <p class=\"card-text\">".$original[1]."</p>
                         ";
 
-    $temp = attachTags($tags,$temp);
+    //$temp = attachTags($tags,$temp);
 
       $temp = $temp . "</div>
                     </div>";
@@ -399,7 +401,7 @@ function makeText($fileName,$userId,$temp,$dir){
                         <p class=\"card-text\">".$original[0]."</p>
                         </div>";
 
-    $temp = attachTags($tags,$temp);
+    //$temp = attachTags($tags,$temp);
 
     $temp = $temp . "</div>";
 
@@ -409,7 +411,7 @@ function makeText($fileName,$userId,$temp,$dir){
                         <p class=\"card-text\">".$original[1]."</p>
                         </div>";
 
-    $temp = attachTags($tags,$temp);
+    //$temp = attachTags($tags,$temp);
 
     $temp = $temp . "</div>";
 
@@ -458,7 +460,7 @@ $conn->close();
                     <a class="nav-link" href="indexForExpert.php">Browse All</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="indexMyQuestions.php">Questions You SOlved</a>
+                    <a class="nav-link" href="mySolution.php">Questions You SOlved</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="php/logout.php">Signout</a>

@@ -7,7 +7,7 @@ if(isset($_SESSION['name'])){
   $id = $_SESSION['id'];
 }
 else{
-  header('Location: login.html');
+  header('Location: login.php');
 }
 
 $servername = "localhost";
@@ -337,9 +337,11 @@ function makeText($fileName,$userId,$temp,$dir){
   $originalId = $fileName.'original';
   $translatedId = $fileName.'translated';
 
-  $tags = fetchTags($fileName);
 
   if(strcmp($dir, "Question")==0){
+
+      $tags = fetchTags($fileName);
+
 
     $temp = $temp . "<div id=\"".$originalId."\" class=\"card border-light textques\">
                         <div class=\"card-body\">
@@ -374,7 +376,7 @@ function makeText($fileName,$userId,$temp,$dir){
                         <p class=\"card-text\">".$original[0]."</p>
                         ";
 
-    $temp = attachTags($tags,$temp);
+    //$temp = attachTags($tags,$temp);
 
       $temp = $temp . "</div>
                     </div>";
@@ -385,7 +387,7 @@ function makeText($fileName,$userId,$temp,$dir){
                         <p class=\"card-text\">".$original[1]."</p>
                         ";
 
-    $temp = attachTags($tags,$temp);
+    //$temp = attachTags($tags,$temp);
 
       $temp = $temp . "</div>
                     </div>";
@@ -400,7 +402,7 @@ function makeText($fileName,$userId,$temp,$dir){
                         <p class=\"card-text\">".$original[0]."</p>
                         </div>";
 
-    $temp = attachTags($tags,$temp);
+    //$temp = attachTags($tags,$temp);
 
     $temp = $temp . "</div>";
 
@@ -410,7 +412,7 @@ function makeText($fileName,$userId,$temp,$dir){
                         <p class=\"card-text\">".$original[1]."</p>
                         </div>";
 
-    $temp = attachTags($tags,$temp);
+    //$temp = attachTags($tags,$temp);
 
     $temp = $temp . "</div>";
 

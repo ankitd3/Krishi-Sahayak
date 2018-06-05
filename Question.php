@@ -123,12 +123,12 @@ if(isset($_POST['submit_text'])||isset($_POST['submit_img'])||isset($_POST['subm
 			insertdb($fileName);
 			insertTags($wordsTags);
 			updateTag($wordsTags,$fileName);
+			header('Location: indexForFarmer.php');
 		}
 	}
-	header('Location: indexForFarmer.php');
 }
 
-function checkRelatedQuestions($qid,$tags){
+function checkRelatedQuestions($qid1,$tags){
 
 	$l = sizeof($tags);
 
@@ -137,13 +137,13 @@ function checkRelatedQuestions($qid,$tags){
 		$a = $tags[0];
 		$b = $tags[1];
 		$c = $tags[2];
-		$sql = "SELECT * FROM q_tag WHERE (tag LIKE '%".$a."%' OR tag LIKE '%".$b."%' OR tag LIKE '%".$c."%')";
+		$sql = "SELECT * FROM q_tag WHERE (tag LIKE '%".$a."%' AND tag LIKE '%".$b."%' AND tag LIKE '%".$c."%')";
 	}
 	elseif ($l==2) {
 
 		$a = $tags[0];
 		$b = $tags[1];
-		$sql = "SELECT * FROM q_tag WHERE (tag LIKE '%".$a."%' OR tag LIKE '%".$b."%')";
+		$sql = "SELECT * FROM q_tag WHERE (tag LIKE '%".$a."%' AND tag LIKE '%".$b."%')";
 	}
 	elseif ($l==1) {
 
@@ -162,12 +162,7 @@ function checkRelatedQuestions($qid,$tags){
 	      }
 	  }
 
-	 if(!empty($qidArray)){
-	 	return $qidArray;
-	 }
-	 else{
-	 	return 0;
-	 }
+	 return $qidArray;
 }
 
 

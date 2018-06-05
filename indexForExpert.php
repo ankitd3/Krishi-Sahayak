@@ -9,7 +9,7 @@ if(isset($_SESSION['name'])){
 
 }
 else{
-  header('Location: login.html');
+  header('Location: login.php');
 }
 
 $servername = "localhost";
@@ -110,7 +110,7 @@ function attachTags($tags,$temp){
     $length = count($tags);
 
     for($x = 0; $x < $length; $x++) {
-      $temp = $temp . "<a href='filterQoneTag.php?tag=".$tags[$x]."' class=\"badge badge-light\">".$tags[$x]."</a>";
+      $temp = $temp . "<a href='filterQoneTagForExpert.php?tag=".$tags[$x]."' class=\"badge badge-light\">".$tags[$x]."</a>";
     }
 
     return $temp;
@@ -539,7 +539,7 @@ $conn->close();
               <div class="tab-content" id="myTabContent">
                 <div class="tab-pane fade show active" id="home1" role="tabpanel" aria-labelledby="home-tab">
                     <br>
-                    <form action = "Comments.php" enctype="multipart/form-data" method="POST">
+                    <form action = "comments.php" enctype="multipart/form-data" method="POST">
 
                         <div class="form-group">
                             
@@ -554,7 +554,7 @@ $conn->close();
                 </div>
                 <div class="tab-pane fade" id="profile1" role="tabpanel" aria-labelledby="profile1-tab">
 
-                    <form action="Comments.php" enctype="multipart/form-data" method="POST">
+                    <form action="comments.php" enctype="multipart/form-data" method="POST">
 
                         <div class="form-group">
                             <br>
@@ -565,8 +565,6 @@ $conn->close();
                             <input type="file" name="img_file" class="form-control-file" id="img_file">
                         </div>
                         <div class="form-group">
-                            <label for="info"><h5>Solution:</h5></label>
-                            <br>
                             <button class="btn btn-md" type="button" onclick="start('info');"> Click here to start recording text </button>
                             <select onchange="changeLanguage('lang_img_text');" id="lang_img_text">
                                 <option value="mr">Marathi</option>
@@ -592,7 +590,7 @@ $conn->close();
                 </div>
                 <div class="tab-pane fade" id="text1" role="tabpanel" aria-labelledby="text1-tab">
 
-                        <form action="Comments.php" enctype="multipart/form-data" method="POST">
+                        <form action="comments.php" enctype="multipart/form-data" method="POST">
 
                           <input style="display: none;" type="text" id="textComment" name="qid">
                             
@@ -634,6 +632,50 @@ $conn->close();
           </div>
         </div>
       </div>
+
+<script type="text/javascript">
+
+        var lang;
+
+        function changeLanguage (l){
+            var x = document.getElementById(l);
+            lang = x.value;
+        }
+
+        function start (id) {
+
+            var r = document.getElementById(id);
+
+            if('webkitSpeechRecognition' in window){
+                var speechRecognizer = new webkitSpeechRecognition();
+                speechRecognizer.continuous = true;
+                speechRecognizer.interimResults = true;
+                speechRecognizer.lang = lang;
+                speechRecognizer.start();
+
+                var finalTranscripts = '';
+
+                speechRecognizer.onresult = function(event){
+                    var interimTranscripts = '';
+                    for(var i = event.resultIndex; i < event.results.length; i++){
+                        var transcript = event.results[i][0].transcript;
+                        transcript.replace("\n", "<br>");
+                        if(event.results[i].isFinal){
+                            finalTranscripts += transcript;
+                        }else{
+                            interimTranscripts += transcript;
+                        }
+                    }
+                    r.innerHTML = finalTranscripts + interimTranscripts;
+                };
+                speechRecognizer.onerror = function (event) {
+                };
+            }else{
+                r.innerHTML = 'Your browser is not supported. If google chrome, please upgrade!';
+            }
+        }
+</script>
+
 
     <script type="text/javascript">
         function addQid(qid){

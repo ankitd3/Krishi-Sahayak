@@ -10,6 +10,8 @@ else{
   header('Location: login.php');
 }
 
+$tag = $_GET['tag'];
+
 $servername = "localhost";
 $username = "root";
 $password = "";
@@ -21,8 +23,8 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 //$sqlSolved = "SELECT qid,sid FROM qs WHERE qid in (select qid from q where q\.solved = 1)";
-$sqlSolved = "SELECT * FROM q WHERE solved = 1";
-$sqlUnsolved = "SELECT * FROM q WHERE solved = 0";
+$sqlSolved = "SELECT * FROM q WHERE (solved = 1) AND qid IN (SELECT qid FROM q_tag WHERE tag LIKE '%".$tag."%')";
+$sqlUnsolved = "SELECT * FROM q WHERE (solved = 0) AND qid IN (SELECT qid FROM q_tag WHERE tag LIKE '%".$tag."%')";
 
 $allowedAudio = array('mp3','ogg'); //accepted file types
 $allowedImage = array('jpeg','jpg','png'); //accepted file types
@@ -69,10 +71,6 @@ function fetchQuestion($sql,$solved){
 
             $temp = makeText($fileName,$farmer_name,$temp,"Question");
           }
-          $temp = $temp . "
-          <button onclick=\"starQid('".$fileName."');\" type=\"button\" class=\"btn btn-md\">
-            STAR
-          </button>";
 
           //attach solution(if any)
           if($solved!=0){
@@ -110,7 +108,7 @@ function attachTags($tags,$temp){
     $length = count($tags);
 
     for($x = 0; $x < $length; $x++) {
-      $temp = $temp . "<a href='filterQoneTag.php?tag=".$tags[$x]."' class=\"badge badge-light\">".$tags[$x]."</a>";
+      $temp = $temp . "<a href='filterQoneTagForExpert.php?tag=".$tags[$x]."' class=\"badge badge-light\">".$tags[$x]."</a>";
     }
 
     return $temp;
@@ -337,10 +335,10 @@ function makeText($fileName,$userId,$temp,$dir){
   $originalId = $fileName.'original';
   $translatedId = $fileName.'translated';
 
-
   if(strcmp($dir, "Question")==0){
 
     $tags = fetchTags($fileName);
+
 
     $temp = $temp . "<div id=\"".$originalId."\" class=\"card border-light textques\">
                         <div class=\"card-body\">
@@ -453,17 +451,14 @@ $conn->close();
         <div class="collapse navbar-collapse" id="menu">
 
             <ul class="navbar-nav ml-auto">
-                <li class="nav-item active">
-                    <a class="nav-link" href="uploadques.html">Ask question</a>
+<!--                 <li class="nav-item active">
+                    <a class="nav-link" href="unsolved.php">Solve Questions</a>
+                </li> -->
+                <li class="nav-item">
+                    <a class="nav-link" href="indexForExpert.php">Browse All</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="indexForFarmer.php">Browse All</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="indexMyQuestions.php">My questions</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="starQuestion.php">Starred questions</a>
+                    <a class="nav-link" href="mySolution.php">Questions You Solved</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="php/logout.php">Signout</a>
@@ -506,10 +501,6 @@ $conn->close();
 
             </div>
         </div>
-        <form action="php/star.php" method="POST" id="starForm">
-                  <input style="display: none;" type="text" id="starQid" name="starQid">
-                  <input style="display: none;"  type="text" id="starQid" name="starFid" value="<?php echo $_SESSION['id']; ?>">
-        </form>
     </div>
 
 
@@ -520,7 +511,7 @@ $conn->close();
           
             <!-- Modal Header -->
             <div class="modal-header">
-              <h4 class="modal-title">Post Comment</h4>
+              <h4 class="modal-title">Modal Heading</h4>
               <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
             
@@ -545,13 +536,13 @@ $conn->close();
               <div class="tab-content" id="myTabContent">
                 <div class="tab-pane fade show active" id="home1" role="tabpanel" aria-labelledby="home-tab">
                     <br>
-                    <form action = "comments.php" enctype="multipart/form-data" method="POST">
+                    <form action = "Comments.php" enctype="multipart/form-data" method="POST">
 
                         <div class="form-group">
                             
                             <label for="audio_file"><h5>Choose audio files</h5></label>
                             
-                            <input style="display: none;" type="text" id="audioComment" name="qid">
+                            <input type="text" id="audioComment" name="qid">
                             
                             <input type="file" name="audio_file" accept = "audio/*" class="form-control-file" id="audio_file">
                         </div>
@@ -560,17 +551,19 @@ $conn->close();
                 </div>
                 <div class="tab-pane fade" id="profile1" role="tabpanel" aria-labelledby="profile1-tab">
 
-                    <form action="comments.php" enctype="multipart/form-data" method="POST">
+                    <form action="Comments.php" enctype="multipart/form-data" method="POST">
 
                         <div class="form-group">
                             <br>
                             <label for="img_file"> <h5>Choose image from device:</h5> </label>
                             
-                            <input style="display: none;" type="text" id="imgComment" name="qid">
+                            <input type="text" id="imgComment" name="qid">
 
                             <input type="file" name="img_file" class="form-control-file" id="img_file">
                         </div>
                         <div class="form-group">
+                            <label for="info"><h5>Solution:</h5></label>
+                            <br>
                             <button class="btn btn-md" type="button" onclick="start('info');"> Click here to start recording text </button>
                             <select onchange="changeLanguage('lang_img_text');" id="lang_img_text">
                                 <option value="mr">Marathi</option>
@@ -596,9 +589,9 @@ $conn->close();
                 </div>
                 <div class="tab-pane fade" id="text1" role="tabpanel" aria-labelledby="text1-tab">
 
-                        <form action="comments.php" enctype="multipart/form-data" method="POST">
+                        <form action="Comments.php" enctype="multipart/form-data" method="POST">
 
-                          <input style="display: none;" type="text" id="textComment" name="qid">
+                          <input type="text" id="textComment" name="qid">
                             
                             <div class="form-group">
                                 <label for="info"><h5>Solution:</h5></label>
@@ -628,69 +621,23 @@ $conn->close();
                 </div>
               </div>
 
+
+
             </div>
             <!-- Modal body END -->
             <!-- Modal footer -->
             <div class="modal-footer">
               <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
             </div>
+            
           </div>
         </div>
       </div>
 
 
-<script type="text/javascript">
-
-        var lang;
-
-        function changeLanguage (l){
-            var x = document.getElementById(l);
-            lang = x.value;
-        }
-
-        function start (id) {
-
-            var r = document.getElementById(id);
-
-            if('webkitSpeechRecognition' in window){
-                var speechRecognizer = new webkitSpeechRecognition();
-                speechRecognizer.continuous = true;
-                speechRecognizer.interimResults = true;
-                speechRecognizer.lang = lang;
-                speechRecognizer.start();
-
-                var finalTranscripts = '';
-
-                speechRecognizer.onresult = function(event){
-                    var interimTranscripts = '';
-                    for(var i = event.resultIndex; i < event.results.length; i++){
-                        var transcript = event.results[i][0].transcript;
-                        transcript.replace("\n", "<br>");
-                        if(event.results[i].isFinal){
-                            finalTranscripts += transcript;
-                        }else{
-                            interimTranscripts += transcript;
-                        }
-                    }
-                    r.innerHTML = finalTranscripts + interimTranscripts;
-                };
-                speechRecognizer.onerror = function (event) {
-                };
-            }else{
-                r.innerHTML = 'Your browser is not supported. If google chrome, please upgrade!';
-            }
-        }
-</script>
-
 
 
     <script type="text/javascript">
-
-        function starQid(qid){
-          document.getElementById('starQid').value=qid;
-          document.getElementById("starForm").submit();
-
-        }
         function addQid(qid){
           document.getElementById('audioComment').value=qid;
           document.getElementById('imgComment').value=qid;

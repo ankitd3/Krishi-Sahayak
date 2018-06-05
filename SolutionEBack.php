@@ -7,7 +7,7 @@ if(isset($_SESSION['name'])){
   $id = $_SESSION['id'];
 }
 else{
-  header('Location: login.html');
+  header('Location: login.php');
 }
 //$id = "25";
 
@@ -121,7 +121,7 @@ if(isset($_POST['submit_text'])||isset($_POST['submit_img'])||isset($_POST['subm
 
 		translateLang($fileNewName,$var);
 	}
-	header('Location: indexMyQuestions.php');
+	header('Location: mySolution.php');
 }
 
 function translateLang($file,$input){

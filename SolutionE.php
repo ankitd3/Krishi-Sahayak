@@ -29,17 +29,17 @@
         <div class="collapse navbar-collapse" id="menu">
 
             <ul class="navbar-nav ml-auto">
-                <li class="nav-item active">
-                    <a class="nav-link" href="#">Answer questions</a>
+<!--                 <li class="nav-item active">
+                    <a class="nav-link" href="unsolved.php">Solve Questions</a>
+                </li> -->
+                <li class="nav-item">
+                    <a class="nav-link" href="indexForExpert.php">Browse All</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Frequently asked</a>
+                    <a class="nav-link" href="mySolution.php">Questions You Solved</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">My questions</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Signout</a>
+                    <a class="nav-link" href="php/logout.php">Signout</a>
                 </li>
             </ul>
         </div>
@@ -76,7 +76,7 @@
                 <br>
                 <form action = "SolutionEBack.php" enctype="multipart/form-data" method="POST">
 
-                    <input type="text" name="qid" value=<?php echo $_GET['qid'];?>>
+                    <input style="display: none;" type="text" name="qid" value=<?php echo $_GET['qid'];?>>
 
                     <div class="form-group">
                         <label for="audio_file"><h5>Choose audio files</h5></label>
@@ -89,7 +89,7 @@
 
                 <form action="SolutionEBack.php" enctype="multipart/form-data" method="POST">
 
-                    <input type="text" name="qid" value=<?php echo $_GET['qid'];?>>
+                    <input style="display: none;" type="text" name="qid" value=<?php echo $_GET['qid'];?>>
 
                     <div class="form-group">
                         <br>
@@ -126,7 +126,7 @@
 
                     <form action="SolutionEBack.php" enctype="multipart/form-data" method="POST">
 
-                        <input type="text" name="qid" value=<?php echo $_GET['qid'];?>>
+                        <input style="display: none;" type="text" name="qid" value=<?php echo $_GET['qid'];?>>
 
                         <div class="form-group">
                             <label for="info"><h5>Solution:</h5></label>
