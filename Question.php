@@ -117,7 +117,6 @@ if(isset($_POST['submit_text'])||isset($_POST['submit_img'])||isset($_POST['subm
 
 			//insertdb($fileName);
 			//updateTag($wordsTags,$fileName);
-
 		}
 		else{
 			insertdb($fileName);
@@ -132,37 +131,67 @@ function checkRelatedQuestions($qid1,$tags){
 
 	$l = sizeof($tags);
 
+	$qidArray = array();
+
 	if($l>=3){
 		
 		$a = $tags[0];
 		$b = $tags[1];
 		$c = $tags[2];
 		$sql = "SELECT * FROM q_tag WHERE (tag LIKE '%".$a."%' AND tag LIKE '%".$b."%' AND tag LIKE '%".$c."%')";
+
+		$result = $GLOBALS['conn']->query($sql);
+		  if ($result->num_rows > 0) {
+		      // output data of each row
+		      while($row = $result->fetch_assoc()) {
+		          $qid =$row["qid"];
+		    	  array_push($qidArray, $qid);
+		      }
+		  }
+
+		  if(!empty($qidArray)){
+		  	return $qidArray;
+		  }
+
 	}
 	elseif ($l==2) {
 
 		$a = $tags[0];
 		$b = $tags[1];
 		$sql = "SELECT * FROM q_tag WHERE (tag LIKE '%".$a."%' AND tag LIKE '%".$b."%')";
+
+		$result = $GLOBALS['conn']->query($sql);
+		  if ($result->num_rows > 0) {
+		      // output data of each row
+		      while($row = $result->fetch_assoc()) {
+		          $qid =$row["qid"];
+		    	  array_push($qidArray, $qid);
+		      }
+		  }
+
+		  if(!empty($qidArray)){
+		  	return $qidArray;
+		  }
 	}
 	elseif ($l==1) {
 
 		$a = $tags[0];
 		$sql = "SELECT * FROM q_tag WHERE (tag LIKE '%".$a."%')";
+
+		$result = $GLOBALS['conn']->query($sql);
+		  if ($result->num_rows > 0) {
+		      // output data of each row
+		      while($row = $result->fetch_assoc()) {
+		          $qid =$row["qid"];
+		    	  array_push($qidArray, $qid);
+		      }
+		  }
+
+		  if(!empty($qidArray)){
+		  	return $qidArray;
+		  }
 	}
-
-	$qidArray = array();
-
-	  $result = $GLOBALS['conn']->query($sql);
-	  if ($result->num_rows > 0) {
-	      // output data of each row
-	      while($row = $result->fetch_assoc()) {
-	          $qid =$row["qid"];
-	    	  array_push($qidArray, $qid);
-	      }
-	  }
-
-	 return $qidArray;
+	return $qidArray;
 }
 
 
